@@ -29,5 +29,11 @@ public class IO {
         return false;
     }
 
+    void waitUntilReady() {
+
+    }
+
+
+
 
 }

@@ -10,7 +10,22 @@ public class Word {
     int buf = 0;
     int[] bytes = new int[6];
     final static int BYTE_SIZE = 64;
+    final static int WORD_SIZE = 6;
+    final static int ZERO = 0;
 
+    final static int PLUS = 1;
+    final static int MINUS = -1;
+
+    public static int MAX_VALUE = Word.BYTE_SIZE * Word.BYTE_SIZE * Word.BYTE_SIZE * Word.BYTE_SIZE * WORD_SIZE - 1;
+    public static int MIN_VALUE = -Word.BYTE_SIZE * Word.BYTE_SIZE * Word.BYTE_SIZE * Word.BYTE_SIZE * WORD_SIZE - 1;
+
+    private static final int weight[] = {
+            1,
+            Word.BYTE_SIZE,
+            Word.BYTE_SIZE * Word.BYTE_SIZE,
+            Word.BYTE_SIZE * Word.BYTE_SIZE * Word.BYTE_SIZE,
+            Word.BYTE_SIZE * Word.BYTE_SIZE * Word.BYTE_SIZE * Word.BYTE_SIZE
+    };
 
     @IntRange(from = 0, to = 63)
     int getField(@IntRange(from = 1, to = 5) int number) {
@@ -25,14 +40,60 @@ public class Word {
         return this;
     }
 
-    boolean getSign() {
+    int getSign() {
         //return buf < 0;
-        return bytes[0] != 0;
+        return bytes[0];
+    }
+
+    void setSign(int sign) {
+        bytes[0] = sign;
+    }
+
+
+    int getQuantity() {
+        return getQuantity(0, WORD_SIZE - 1);
+    }
+
+    int getQuantity(int left, int right) {
+        int sign = 1;
+        int quantity = 0;
+        if (left == 0) {
+            if (getSign() == MINUS) {
+                sign = -1;
+            }
+            ++left;
+        }
+        for (int i = right, w = 0; i > left; --i, ++w) {
+            quantity += bytes[i] * weight[w];
+        }
+        if (sign != 1) {
+            quantity *= sign;
+        }
+        return quantity;
+    }
+
+/*
+    @Deprecated
+    void setQuantity(final int quantity) {
+        if (quantity == 0) {
+            throw new IllegalArgumentException("Quantity is 0.");
+        }
+        // +0 is default.
+        setQuantity(quantity < 0 ? MINUS : PLUS, quantity);
+    }*/
+
+    void setQuantity(final int sign, final int quantity) {
+        reset();
+        for (int i = WORD_SIZE - 1, q = Math.abs(quantity); i > 0 && q > 0; ++i, q /= BYTE_SIZE) {
+            int n = q % BYTE_SIZE;
+            setField(i, n);
+        }
+        setSign(sign);
     }
 
     int getAddress() {
         //return (buf < 0 ? -1 : 1) * buf >> 12 & 0xFF;
-        return (bytes[1] + bytes[2]) * (getSign() ? 1 : -1);
+        return (bytes[1] + bytes[2]) * (getSign() == PLUS ? 1 : -1);
     }
 
     int getIndexSpec() {
@@ -50,12 +111,52 @@ public class Word {
         return bytes[5];
     }
 
-    void clear() {
-        bytes[0] = 0;
+    void reset() {
+        bytes[0] = PLUS;
         bytes[1] = 0;
         bytes[2] = 0;
         bytes[3] = 0;
         bytes[4] = 0;
         bytes[5] = 0;
+    }
+
+    void shiftLeft() {
+        bytes[1] = bytes[2];
+        bytes[2] = bytes[3];
+        bytes[3] = bytes[4];
+        bytes[4] = bytes[5];
+        bytes[5] = ZERO;
+    }
+
+    void shiftRight() {
+        bytes[5] = bytes[4];
+        bytes[4] = bytes[3];
+        bytes[3] = bytes[2];
+        bytes[2] = bytes[1];
+        bytes[1] = ZERO;
+    }
+
+    void shiftLeft(int number) {
+        for (int i = 0; i < number && i < 5; ++i) {
+            shiftLeft();
+        }
+    }
+
+    void shiftRight(int number) {
+        for (int i = 0; i < number && i < 5; ++i) {
+            shiftRight();
+        }
+    }
+
+    void copy(Word word) {
+        for (int i = 0; i < bytes.length; ++i) {
+            word.bytes[i] = bytes[i];
+        }
+        /*word.setSign(getSign());
+        word.setField(1, getField(1));
+        word.setField(2, getField(2));
+        word.setField(3, getField(3));
+        word.setField(4, getField(4));
+        word.setField(5, getField(5));*/
     }
 }

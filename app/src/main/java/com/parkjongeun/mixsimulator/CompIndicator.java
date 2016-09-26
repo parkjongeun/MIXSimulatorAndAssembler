@@ -5,7 +5,7 @@ package com.parkjongeun.mixsimulator;
  */
 public class CompIndicator {
 
-    int compIndi;
+    private int compIndi;
 
     boolean isEqual() {
         return compIndi == 1;

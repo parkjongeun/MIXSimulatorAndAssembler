@@ -35,20 +35,39 @@ public class Mix {
     final static int BYTE_COUNT = 5;
 
 
+    public Mix() {
+        mRegA = new Register();
+        mRegX = new Register();
+        mRegIx = new IndexRegister[6 + 1];
+        for (int i = 1; i <= 6; ++i) {
+            mRegIx[i] = new IndexRegister();
+        }
+        mRegJ = new IndexRegister();
+        mOverFlowToggle = new OverFlowToggle();
+        mCompIndicator = new CompIndicator();
+        mMemory = new Memory();
+        mIOUnit = new IO[0];
+    }
+
 
     // Generic load operation.
     void load(Register reg, int addr, int left, int right) {
         checkFieldSpec(left, right);
         checkAddress(addr);
 
-
         reg.reset();
+        Word mem = mMemory.get(addr);
+
+        if (left == 0) {
+            reg.setSign(mem.getSign());
+            ++left;
+        }
 
         for (int i = left; i <= right; ++i) {
             reg.setField(i, mMemory.get(addr).getField(i));
         }
         if (right > 0) {
-            reg.shiftRight(BYTE_COUNT - right);
+            reg.shiftRight(Word.WORD_SIZE - 1 - right);
         }
     }
 
@@ -181,11 +200,15 @@ public class Mix {
         int r = reg.getQuantity();
 
         int sum = r + quantity;
-        if (sum > Word.MAX_VALUE || sum < Word.MIN_VALUE) {
-            mOverFlowToggle.setOverFlow(true);
-        }
         int sign = sum == 0 ? reg.getSign() : (sum < 0 ? Word.MINUS : Word.PLUS);
-        reg.setQuantity(sign, sum);
+        int sumAbs = Math.abs(sum);
+
+        if (sumAbs > Word.MAX_VALUE) {
+            mOverFlowToggle.setOverFlow(true);
+            sumAbs = sumAbs % Word.MAX_VALUE;
+        }
+
+        reg.setQuantity(sign, sumAbs);
     }
 
     void subtract(int addr, int left, int right) {
@@ -229,8 +252,9 @@ public class Mix {
             long rAX = (mRegA.getSign() == Word.MINUS ? -1 : 1) * rAAbs * (Word.MAX_VALUE + 1) + rXAbs;
             long quotient = rAX / v; // +-floor(|aAX/V|)
             long remainder = (mRegA.getSign() == Word.MINUS ? -1 : 1) * Math.abs(rAX) % Math.abs(v); // +-(|rAX| mod |V|)
+            int prevRegASign = mRegA.getSign();
             mRegA.setQuantity(mRegA.getSign() == vSign ? Word.PLUS : Word.MINUS, (int) Math.abs(quotient));
-            mRegX.setQuantity(mRegA.getSign(), (int) remainder);
+            mRegX.setQuantity(prevRegASign, (int) remainder);
         }
     }
 
@@ -419,13 +443,14 @@ public class Mix {
     // The transfer occurs one word at a time, and rI1 is increased by the value of F at the end of the operation.
     // If F = 0, nothing happens.
     void move(int addr, int amount) {
-        int rI1 = mRegIx[1].getQuantity();
-        if (rI1 < 0) {
-            throw new IllegalStateException();
-        }
-        for (int i = 0; i < amount; ++i) {
-            mMemory.get(rI1).copy(mMemory.get(addr));
+        for (int _i = 0; _i < amount; ++_i) {
+            int rI1 = mRegIx[1].getQuantity();
+            if (rI1 < 0) {
+                throw new IllegalStateException("rI1 < 0.");
+            }
+            mMemory.get(addr).copy(mMemory.get(rI1));
             ++rI1;
+            mRegIx[1].setQuantity(Word.PLUS, rI1);
             ++addr;
         }
     }

@@ -403,4 +403,77 @@ public class MixTest {
         assertEquals(39, mix.mRegX.getField(4));
         assertEquals(39, mix.mRegX.getField(5));
     }
+
+    @Test
+    public void test1() {
+        Mix mix = new Mix();
+
+        Executor executor = new Executor(mix);
+
+        Instruction[] pgm = new Instruction[] {
+                new Instruction(false, 1, 0, 5, "STZ"),
+                new Instruction(false, 1, 0, 5, "ENNX"),
+                new Instruction(false, 1, 0, 1, "STX"),
+                new Instruction(false, 1, 0, 5, "SLAX"),
+                new Instruction(false, 1, 0, 5, "ENNA"),
+                new Instruction(false, 1, 0, 5, "INCX"),
+                new Instruction(false, 1, 0, 5, "ENT1"),
+                new Instruction(false, 1, 0, 5, "SRC"),
+                new Instruction(false, 1, 0, 5, "ADD"),
+                new Instruction(true, 1, 0, 5, "DEC1"),
+                new Instruction(false, 1, 0, 5, "STZ"),
+                new Instruction(false, 1, 0, 5, "CMPA"),
+                new Instruction(true, 1, 1, 1, "MOVE"),
+                new Instruction(false, 1, 0, 5, "NUM"),
+                new Instruction(false, 1, 0, 5, "CHAR"),
+                new Instruction(false, 1, 0, 5, "HLT"),
+        };
+        executor.execute(pgm);
+
+        assertEquals(Word.MINUS, mix.mRegA.getSign());
+        assertEquals(30, mix.mRegA.getField(1));
+        assertEquals(30, mix.mRegA.getField(2));
+        assertEquals(30, mix.mRegA.getField(3));
+        assertEquals(30, mix.mRegA.getField(4));
+        assertEquals(30, mix.mRegA.getField(5));
+
+        assertEquals(Word.MINUS, mix.mRegX.getSign());
+        assertEquals(31, mix.mRegX.getField(1));
+        assertEquals(30, mix.mRegX.getField(2));
+        assertEquals(30, mix.mRegX.getField(3));
+        assertEquals(30, mix.mRegX.getField(4));
+        assertEquals(30, mix.mRegX.getField(5));
+
+        assertEquals(Word.PLUS, mix.mRegIx[1].getSign());
+        assertEquals(3, mix.mRegIx[1].getQuantity());
+
+        assertEquals(Word.PLUS, mix.mMemory.get(1).getSign());
+        assertEquals(0, mix.mMemory.get(1).getQuantity());
+        assertEquals(Word.PLUS, mix.mMemory.get(2).getSign());
+        assertEquals(0, mix.mMemory.get(2).getQuantity());
+
+
+        // LESS
+        //1: +00000
+        // A -90001
+        // X -10000
+        // I1 +00002
+
+        // OVERFLOW ON
+        //0: +00000
+        //1: +00000
+        //A -00000 X -10000
+        //A
+        //I1 +00002
+
+        // 1: -10000
+        //
+        //A: -90000 X: -10000
+        //I1: +00001
+
+
+
+
+
+    }
 }

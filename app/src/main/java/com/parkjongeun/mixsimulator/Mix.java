@@ -4,6 +4,7 @@ package com.parkjongeun.mixsimulator;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Pair;
 import android.webkit.WebSettings;
 
 import java.util.Arrays;
@@ -50,6 +51,11 @@ public class Mix {
     }
 
 
+    void start() {
+
+    }
+
+
     // Generic load operation.
     void load(Register reg, int addr, int left, int right) {
         checkFieldSpec(left, right);
@@ -71,12 +77,33 @@ public class Mix {
         }
     }
 
+    void load_(Register reg, int address, int index, int fieldSpec) {
+        int m = calcM(address, index);
+        Pair<Integer, Integer> fs = decodeFieldSpec(fieldSpec);
+        load(reg, m, fs.first, fs.second);
+    }
+
+    Pair<Integer, Integer> decodeFieldSpec(int fieldSpec) {
+        if (fieldSpec < 0) {
+            throw new IllegalArgumentException("fieldSpec < 0.");
+        }
+        int left = fieldSpec / 8;
+        int right = fieldSpec % 8;
+        return new Pair<>(left, right);
+    }
+
     // Generic negative load operation.
     void loadNegative(Register reg, int addr, int left, int right) {
         load(reg, addr, left, right);
         if (left == 0) {
             reg.setSign(-mMemory.get(addr).getSign());
         }
+    }
+
+    void loadNegative_(Register reg, int address, int index, int fieldSpec) {
+        int m = calcM(address, index);
+        Pair<Integer, Integer> fs = decodeFieldSpec(fieldSpec);
+        loadNegative(reg, m, fs.first, fs.second);
     }
 
 
@@ -101,14 +128,23 @@ public class Mix {
     // Same as STi, except that rJ is stored and its sign is always +.
     void storeJ(int addr, int left, int right) {
         store(mRegJ, addr, left, right);
-        mMemory.get(addr).setSign(Word.PLUS);
+        //mMemory.get(addr).setSign(Word.PLUS);
     }
 
     // STZ
     // Same as STA, except that plus zero is stored.
-    void storeZero(int addr, int left, int right) {
-        store(mRegA, addr, left, right);
-        mMemory.get(addr).setSign(Word.PLUS);
+    void storeZero(int addr, final int left, final int right) {
+        checkFieldSpec(left, right);
+        checkAddress(addr);
+
+        Word word = mMemory.get(addr);
+
+        for (int f = right; f >= left && f > 0; --f) {
+            word.setField(f, 0);
+        }
+        if (left == 0) {
+            word.setSign(Word.PLUS);
+        }
     }
 
     // Generic store operation.
@@ -124,6 +160,12 @@ public class Mix {
         if (left == 0) {
             word.setSign(reg.getSign());
         }
+    }
+
+    void store_(Register reg, int address, int index, int fieldSpec) {
+        int m = calcM(address, index);
+        Pair<Integer, Integer> fSpec = decodeFieldSpec(fieldSpec);
+        store(reg, m, fSpec.first, fSpec.second);
     }
 
     void checkFieldSpec(int left, int right) {
@@ -146,11 +188,17 @@ public class Mix {
 
     // SLA
     void shiftLeftRegA(int number) {
+        if (number < 0) {
+            throw new IllegalArgumentException("number < 0.");
+        }
         mRegA.shiftLeft(number);
     }
 
     // SRA
     void shiftRightRegA(int number) {
+        if (number < 0) {
+            throw new IllegalArgumentException("number < 0.");
+        }
         mRegA.shiftRight(number);
     }
 
@@ -161,11 +209,26 @@ public class Mix {
         mRegX.shiftLeft();
     }
 
+    void shiftLeftRegAX(int shift) {
+        for (int i = 0; i < shift; ++i) {
+            shiftLeftRegAX();
+        }
+    }
+
     // SRAX
     void shiftRightRegAX() {
         mRegX.shiftRight();
         mRegX.setField(1, mRegA.getField(5));
         mRegA.shiftRight();
+    }
+
+    void shiftRightRegAX(int shift) {
+        if (shift < 0) {
+            throw new IllegalArgumentException("number < 0.");
+        }
+        for (int i = 0; i < shift; ++i) {
+            shiftRightRegAX();
+        }
     }
 
     // SLC
@@ -175,6 +238,15 @@ public class Mix {
         mRegX.setField(5, tmp);
     }
 
+    void shiftLeftRegAXCircle(int shift) {
+        if (shift < 0) {
+            throw new IllegalArgumentException("number < 0.");
+        }
+        for (int i = 0; i < shift; ++i) {
+            shiftLeftRegAXCircle();
+        }
+    }
+
     // SRC
     void shiftRightRegAXCircle() {
         int tmp = mRegX.getField(5);
@@ -182,6 +254,14 @@ public class Mix {
         mRegA.setField(1, tmp);
     }
 
+    void shiftRightRegAXCircle(int shift) {
+        if (shift < 0) {
+            throw new IllegalArgumentException("number < 0.");
+        }
+        for (int i = 0; i < shift; ++i) {
+            shiftRightRegAXCircle();
+        }
+    }
 
     // Arithmetic operators
 
@@ -192,6 +272,12 @@ public class Mix {
         add(quantity);
     }
 
+    void add_(Register reg, int address, int index, int fieldSpec) {
+        int m = calcM(address, index);
+        Pair<Integer, Integer> fSpec = decodeFieldSpec(fieldSpec);
+        add_(reg, m, fSpec.first, fSpec.second);
+    }
+
     void add(int quantity) {
         add(mRegA, quantity);
     }
@@ -200,13 +286,13 @@ public class Mix {
         int r = reg.getQuantity();
 
         int sum = r + quantity;
-        int sign = sum == 0 ? reg.getSign() : (sum < 0 ? Word.MINUS : Word.PLUS);
         int sumAbs = Math.abs(sum);
 
         if (sumAbs > Word.MAX_VALUE) {
             mOverFlowToggle.setOverFlow(true);
-            sumAbs = sumAbs % Word.MAX_VALUE;
+            sumAbs = sumAbs % (Word.MAX_VALUE + 1);
         }
+        int sign = sumAbs == 0 ? reg.getSign() : (sum < 0 ? Word.MINUS : Word.PLUS);
 
         reg.setQuantity(sign, sumAbs);
     }
@@ -214,6 +300,12 @@ public class Mix {
     void subtract(int addr, int left, int right) {
         int quantity = mMemory.get(addr).getQuantity(left, right);
         add(-quantity);
+    }
+
+    void subtract_(Register reg, int address, int index, int fieldSpec) {
+        int m = calcM(address, index);
+        Pair<Integer, Integer> fSpec = decodeFieldSpec(fieldSpec);
+        subtract_(reg, m, fSpec.first, fSpec.second);
     }
 
     // The 10-byte product, V times rA, replaces register A and X.
@@ -231,6 +323,12 @@ public class Mix {
         int sign = mMemory.get(addr).getSign() == mRegA.getSign() ? Word.PLUS : Word.MINUS;
         mRegA.setQuantity(sign, gs);
         mRegX.setQuantity(sign, ls);
+    }
+
+    void multiply_(Register reg, int address, int index, int fieldSpec) {
+        int m = calcM(address, index);
+        Pair<Integer, Integer> fSpec = decodeFieldSpec(fieldSpec);
+        multiply(m, fSpec.first, fSpec.second);
     }
 
     // The value of rA and rX, treated as a 10byte-number rAX with the sign of rA, is divided by the value V.
@@ -256,6 +354,12 @@ public class Mix {
             mRegA.setQuantity(mRegA.getSign() == vSign ? Word.PLUS : Word.MINUS, (int) Math.abs(quotient));
             mRegX.setQuantity(prevRegASign, (int) remainder);
         }
+    }
+
+    void divide_(Register reg, int address, int index, int fieldSpec) {
+        int m = calcM(address, index);
+        Pair<Integer, Integer> fSpec = decodeFieldSpec(fieldSpec);
+        divide(m, fSpec.first, fSpec.second);
     }
 
     // Address transfer operators.
@@ -325,6 +429,12 @@ public class Mix {
         }
     }
 
+    void compare_(Register reg, int address, int index, int fieldSpec) {
+        int m = calcM(address, index);
+        Pair<Integer, Integer> fSpec = decodeFieldSpec(fieldSpec);
+        compare_(reg, m, fSpec.first, fSpec.second);
+    }
+
     void jump(int from, int to) {
         checkMemoryBound(from);
         checkMemoryBound(to);
@@ -333,9 +443,19 @@ public class Mix {
         jumpSaveJ(to);
     }
 
+    void jump_(int address, int index) {
+        int m = calcM(address, index);
+        jump(mPC, m);
+    }
+
     void jumpSaveJ(int to) {
         checkMemoryBound(to);
         mPC = to;
+    }
+
+    void jumpSaveJ_(int address, int index) {
+        int m = calcM(address, index);
+        jumpSaveJ(m);
     }
 
     void checkMemoryBound(int addr) {
@@ -352,6 +472,11 @@ public class Mix {
         }
     }
 
+    void jumpOnOverflow_(int address, int index) {
+        int m = calcM(address, index);
+        jumpOnOverflow(mPC, m);
+    }
+
     void jumpOnNoOverflow(int from, int to) {
         if (!mOverFlowToggle.isOverFlow()) {
             jump(from, to);
@@ -360,10 +485,20 @@ public class Mix {
         }
     }
 
+    void jumpOnNoOverflow_(int address, int index) {
+        int m = calcM(address, index);
+        jumpOnNoOverflow(mPC, m);
+    }
+
     void jumpOnLess(int from, int to) {
         if (mCompIndicator.isLess()) {
             jump(from, to);
         }
+    }
+
+    void jumpOnLess_(int address, int index) {
+        int m = calcM(address, index);
+        jumpOnLess(mPC, m);
     }
 
     void jumpOnEqual(int from, int to) {
@@ -372,10 +507,20 @@ public class Mix {
         }
     }
 
+    void jumpOnEqual_(int address, int index) {
+        int m = calcM(address, index);
+        jumpOnEqual(mPC, m);
+    }
+
     void jumpOnGreater(int from, int to) {
         if (mCompIndicator.isGreater()) {
             jump(from, to);
         }
+    }
+
+    void jumpOnGreater_(int address, int index) {
+        int m = calcM(address, index);
+        jumpOnGreater(mPC, m);
     }
 
     void jumpOnGreaterOrEqual(int from, int to) {
@@ -384,16 +529,31 @@ public class Mix {
         }
     }
 
+    void jumpOnGreaterOrEqual_(int address, int index) {
+        int m = calcM(address, index);
+        jumpOnGreaterOrEqual(mPC, m);
+    }
+
     void jumpOnUnEqual(int from, int to) {
         if (mCompIndicator.isLess() || mCompIndicator.isGreater()) {
             jump(from, to);
         }
     }
 
+    void jumpOnUnEqual_(int address, int index) {
+        int m = calcM(address, index);
+        jumpOnUnEqual(mPC, m);
+    }
+
     void jumpOnLessOrEqual(int from, int to) {
         if (mCompIndicator.isLess() || mCompIndicator.isEqual()) {
             jump(from, to);
         }
+    }
+
+    void jumpOnLessOrEqual_(int address, int index) {
+        int m = calcM(address, index);
+        jumpOnLessOrEqual(mPC, m);
     }
 
     void jumpNegative(Register reg, int from, int to) {
@@ -403,11 +563,21 @@ public class Mix {
         }
     }
 
+    void jumpNegative_(Register reg, int address, int index) {
+        int m = calcM(address, index);
+        jumpNegative(reg, mPC, m);
+    }
+
     void jumpZero(Register reg, int from, int to) {
         int quantity = reg.getQuantity();
         if (quantity == 0) {
             jump(from, to);
         }
+    }
+
+    void jumpZero_(Register reg, int address, int index) {
+        int m = calcM(address, index);
+        jumpZero(reg, mPC, m);
     }
 
     void jumpPositive(Register reg, int from, int to) {
@@ -417,11 +587,21 @@ public class Mix {
         }
     }
 
+    void jumpPositive_(Register reg, int address, int index) {
+        int m = calcM(address, index);
+        jumpPositive(reg, mPC, m);
+    }
+
     void jumpNonnegative(Register reg, int from, int to) {
         int quantity = reg.getQuantity();
         if (!(quantity < 0)) {
             jump(from, to);
         }
+    }
+
+    void jumpNonnegative_(Register reg, int address, int index) {
+        int m = calcM(address, index);
+        jumpNonnegative(reg, mPC, m);
     }
 
     void jumpNonzero(Register reg, int from, int to) {
@@ -431,11 +611,21 @@ public class Mix {
         }
     }
 
+    void jumpNonzero_(Register reg, int address, int index) {
+        int m = calcM(address, index);
+        jumpNonzero(reg, mPC, m);
+    }
+
     void jumpNonpositive(Register reg, int from, int to) {
         int quantity = reg.getQuantity();
         if (!(quantity > 0)) {
             jump(from, to);
         }
+    }
+
+    void jumpNonpositive_(Register reg, int address, int index) {
+        int m = calcM(address, index);
+        jumpNonpositive(reg, mPC, m);
     }
 
     // MOVE
@@ -453,6 +643,11 @@ public class Mix {
             mRegIx[1].setQuantity(Word.PLUS, rI1);
             ++addr;
         }
+    }
+
+    void move_(int address, int index, int field) {
+        int m = calcM(address, index);
+        move(m, field);
     }
 
 
@@ -617,16 +812,5 @@ public class Mix {
             mRegX.setField(i, 30 + buf[4 + i]);
         }
     }
-
-
-
-
-
-
-
-
-
-
-
 
 }

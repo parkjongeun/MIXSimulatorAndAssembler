@@ -49,7 +49,7 @@ public class MixTest {
         mix.mMemory.get(3).setQuantity(Word.MINUS, Word.MIN_VALUE);
 
         mix.add(3, 0, 5);
-        assertEquals(mix.mRegA.getQuantity(), (-564839 - 564839 + Word.MIN_VALUE) % -Word.MAX_VALUE);
+        assertEquals(mix.mRegA.getQuantity(), (-564839 - 564839 + Word.MIN_VALUE) % (1 + Word.MAX_VALUE));
         assertEquals(mix.mOverFlowToggle.isOverFlow(), true);
     }
 
@@ -172,7 +172,7 @@ public class MixTest {
 
         mix.enter(mix.mRegA, Word.MINUS, 1);
         mix.decrease(mix.mRegA, Word.MAX_VALUE, 0);
-        assertEquals((-1 - Word.MAX_VALUE) % Word.MAX_VALUE, mix.mRegA.getQuantity());
+        assertEquals((-1 - Word.MAX_VALUE) % (Word.MAX_VALUE + 1), mix.mRegA.getQuantity());
         assertEquals(Word.MINUS, mix.mRegA.getSign());
         assertEquals(true, mix.mOverFlowToggle.isOverFlow());
     }

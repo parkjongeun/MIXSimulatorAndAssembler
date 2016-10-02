@@ -1,19 +1,7 @@
 package com.parkjongeun.mixsimulator;
 
-import android.app.ListActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
-import android.widget.SimpleAdapter;
-import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Parkjongeun on 2016. 9. 13..
@@ -25,9 +13,9 @@ public class OpCodeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.opcode_activity);
+        setContentView(R.layout.activity_mix);
 
-        final List<String> opCode = new ArrayList<>();
+        /*final List<String> opCode = new ArrayList<>();
         for(OpCode e : OpCode.values()) {
             opCode.add(e.name() + " " + e.code + " " + e.fieldSpec);
         }
@@ -51,6 +39,6 @@ public class OpCodeActivity extends AppCompatActivity {
             public int getItemCount() {
                 return opCode.size();
             }
-        });
+        });*/
     }
 }

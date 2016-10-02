@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Register A"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+
+            android:paddingTop="2dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            >
+
+            <EditText
+                style="@style/Cell"
+                android:hint="±" />
+            <EditText
+                style="@style/Cell"
+                android:hint="A1"
+                />
+            <EditText
+                style="@style/Cell"
+                android:hint="A2"
+                />
+            <EditText
+                style="@style/Cell"
+                android:hint="A3"
+                />
+            <EditText
+                style="@style/Cell"
+                android:hint="A4"
+                />
+            <EditText
+                style="@style/Cell"
+                android:hint="A5"
+
+                />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Register X"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="2dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            >
+
+            <EditText
+                style="@style/Cell"
+                android:hint="±" />
+            <EditText
+                style="@style/Cell"
+                android:hint="X1"
+
+                />
+            <EditText
+                style="@style/Cell"
+                android:hint="X2"
+
+                />
+            <EditText
+                style="@style/Cell"
+                android:hint="X3"
+                />
+            <EditText
+                style="@style/Cell"
+                android:hint="X4"
+                />
+            <EditText
+                style="@style/Cell"
+                android:hint="X5"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Register I1"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="2dp">
+                <EditText
+                    style="@style/Cell"
+                    android:hint="±" />
+                <EditText
+                    style="@style/Cell"
+                    android:hint="I14"/>
+                <EditText
+                    style="@style/Cell"
+                    android:hint="I15"/>
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Register I2"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="2dp">
+                <EditText
+                    style="@style/Cell"
+                    android:hint="±" />
+                <EditText
+                    style="@style/Cell"
+                    android:hint="I24"/>
+                <EditText
+                    style="@style/Cell"
+                    android:hint="I25"/>
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Register I3"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="2dp">
+                <EditText
+                    style="@style/Cell"
+                    android:hint="±" />
+                <EditText
+                    style="@style/Cell"
+                    android:hint="I34"/>
+                <EditText
+                    style="@style/Cell"
+                    android:hint="I35"/>
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Register I4"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="2dp">
+                <EditText
+                    style="@style/Cell"
+                    android:hint="±" />
+                <EditText
+                    style="@style/Cell"
+                    android:hint="I44"/>
+                <EditText
+                    style="@style/Cell"
+                    android:hint="I45"/>
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Register I5"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="2dp">
+                <EditText
+                    style="@style/Cell"
+                    android:hint="±" />
+                <EditText
+                    style="@style/Cell"
+                    android:hint="I54"/>
+                <EditText
+                    style="@style/Cell"
+                    android:hint="I55"/>
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Register I6"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="2dp">
+                <EditText
+                    style="@style/Cell"
+                    android:hint="±" />
+                <EditText
+                    style="@style/Cell"
+                    android:hint="I64"/>
+                <EditText
+                    style="@style/Cell"
+                    android:hint="I65"/>
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Register J"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="2dp">
+                <EditText
+                    style="@style/Cell"
+                    android:hint="±" />
+                <EditText
+                    style="@style/Cell"
+                    android:hint="J4"/>
+                <EditText
+                    style="@style/Cell"
+                    android:hint="J5"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:text="Overflow\ntoggle"
+                    android:textSize="10sp"
+                    android:lines="2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/overflow_toggle" />
+
+                <RadioButton
+                    android:text="\n"
+                    android:lines="2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/compInd_less" />
+
+                <RadioButton
+                    android:text="\n"
+                    android:lines="2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/compInd_equal" />
+
+                <RadioButton
+                    android:text="Comparison\nindicator"
+                    android:textSize="10sp"
+                    android:lines="2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/compInd_greater" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Memory cells"
+                android:textAlignment="center"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_bg"
+                >
+            </android.support.v7.widget.RecyclerView>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

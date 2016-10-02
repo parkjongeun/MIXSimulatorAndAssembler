@@ -1,43 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
-    <LinearLayout
+    <!--<LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@android:color/black"
-        android:paddingTop="2dp">
+        android:orientation="horizontal">-->
 
-        <EditText
-            style="@style/Cell"
-            android:hint="+-"
-            android:background="@color/cellBackground"/>
-        <EditText
-            style="@style/Cell"
-            android:hint="A1"
-            android:background="@color/cellBackground"
-            />
-        <EditText
-            style="@style/Cell"
-            android:hint="A2"
-            android:background="@color/cellBackground"
-            />
-        <EditText
-            style="@style/Cell"
-            android:hint="A3"
-            android:background="@color/cellBackground"/>
-        <EditText
-            style="@style/Cell"
-            android:hint="A4"
-            android:background="@color/cellBackground"/>
-        <EditText
-            style="@style/Cell"
-            android:hint="A5"
-            android:background="@color/cellBackground"
-            />
+    <TextView
+        android:id="@+id/address"
+        android:text="1000: "
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
-    </LinearLayout>
+    <EditText
+        style="@style/Cell2"
+        android:hint="±"/>
+    <EditText
+        style="@style/Cell2"
+        android:hint="1"/>
+    <EditText
+        style="@style/Cell2"
+        android:hint="2"/>
+    <EditText
+        style="@style/Cell2"
+        android:hint="3"/>
+    <EditText
+        style="@style/Cell2"
+        android:hint="4"/>
+    <EditText
+        style="@style/Cell2"
+        android:hint="5"/>
+
+    <!--</LinearLayout>-->
 
 </LinearLayout>

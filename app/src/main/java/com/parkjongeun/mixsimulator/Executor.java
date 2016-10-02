@@ -16,6 +16,21 @@ public class Executor {
         mMix = mix;
     }
 
+    void start(int address) {
+        mMix.mPC = address;
+
+        while (true) {
+            Word w = mMix.mMemory.read(mMix.mPC);
+            ++mMix.mPC;
+            // NOP
+            if (w.getField(5) == 0) {
+                break;
+            }
+            Instruction instruction = Instruction.fromWord(w);
+            execute(instruction);
+        }
+    }
+
     void execute(Instruction[] pgm) {
         for (int i = 0; i < pgm.length; ++i) {
             execute(pgm[i]);

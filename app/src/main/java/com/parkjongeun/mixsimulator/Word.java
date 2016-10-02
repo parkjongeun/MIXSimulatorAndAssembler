@@ -159,7 +159,7 @@ public class Word {
         }
     }
 
-    void copy(Word word) {
+    void writeTo(Word word) {
         for (int i = 0; i < WORD_SIZE; ++i) {
             word.bytes[i] = bytes[i];
         }
@@ -170,4 +170,5 @@ public class Word {
         word.setField(4, getField(4));
         word.setField(5, getField(5));*/
     }
+
 }

@@ -2,13 +2,7 @@
 package com.parkjongeun.mixsimulator;
 
 
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Pair;
-import android.webkit.WebSettings;
-
-import java.util.Arrays;
-import java.util.function.IntUnaryOperator;
 
 /**
  * Created by Parkjongeun on 2016. 9. 13..
@@ -439,7 +433,7 @@ public class Mix {
         checkMemoryBound(from);
         checkMemoryBound(to);
 
-        mRegJ.setQuantity(Word.PLUS, from + 1);
+        mRegJ.setQuantity(Word.PLUS, from);
         jumpSaveJ(to);
     }
 
@@ -638,7 +632,7 @@ public class Mix {
             if (rI1 < 0) {
                 throw new IllegalStateException("rI1 < 0.");
             }
-            mMemory.get(addr).copy(mMemory.get(rI1));
+            mMemory.get(addr).writeTo(mMemory.get(rI1));
             ++rI1;
             mRegIx[1].setQuantity(Word.PLUS, rI1);
             ++addr;
@@ -694,7 +688,7 @@ public class Mix {
         // TODO: Async
         Word[] block = mIOUnit[unit].input();
         for (int i = 0; i < block.length; ++i) {
-            mMemory.get(addr + i).copy(block[i]);
+            mMemory.get(addr + i).writeTo(block[i]);
         }
     }
 
@@ -708,7 +702,7 @@ public class Mix {
         Word[] block = new Word[blockSize];
 
         for (int i = 0; i < blockSize; ++i) {
-            block[i].copy(mMemory.get(addr + i));
+            block[i].writeTo(mMemory.get(addr + i));
         }
         mIOUnit[unit].output(block);
     }

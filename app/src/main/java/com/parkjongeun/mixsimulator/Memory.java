@@ -5,22 +5,34 @@ package com.parkjongeun.mixsimulator;
  */
 public class Memory {
 
-    Word[] cell;
+    private final Word[] cellArray;
 
     public final static int SIZE = 4000;
 
+
+
     public Memory() {
-        cell = new Word[SIZE];
+        cellArray = new Word[SIZE];
         for (int i = 0; i < SIZE; ++i) {
-            cell[i] = new Word();
+            cellArray[i] = new Word();
         }
     }
 
     Word get(int address) {
-        return cell[address];
+        return cellArray[address];
     }
 
     public int getSize() {
         return 4000;
+    }
+
+    public void write(int address, Word word) {
+        word.writeTo(cellArray[address]);
+    }
+
+    public Word read(int address) {
+        Word w = new Word();
+        cellArray[address].writeTo(w);
+        return w;
     }
 }

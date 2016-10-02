@@ -1,5 +1,8 @@
 package com.parkjongeun.mixsimulator;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Parkjongeun on 2016. 9. 13..
  */
@@ -174,4 +177,26 @@ public enum OpCode {
         this.fieldSpec = fieldSpec;
     }
 
+    public static OpCode valueOf(int C, int F) {
+        OpCode[] vs = values();
+        List<OpCode> candidates = new ArrayList<>();
+        for (int i = 0; i < vs.length; ++i) {
+            if (vs[i].code == C) {
+                candidates.add(vs[i]);
+            }
+        }
+        if (candidates.size() == 0) {
+            throw new IllegalArgumentException("C: " + C + " F: " + F);
+        }
+        if (candidates.size() == 1) {
+            return candidates.get(0);
+        } else {
+            for (int i = 0; i < candidates.size(); ++i) {
+                if (candidates.get(i).fieldSpec == F) {
+                    return candidates.get(i);
+                }
+            }
+            throw new IllegalArgumentException("C: " + C + " F: " + F);
+        }
+    }
 }

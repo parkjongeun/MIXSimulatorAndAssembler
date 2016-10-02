@@ -7,4 +7,5 @@ import android.support.annotation.IntRange;
  */
 public class Register extends Word {
 
+
 }

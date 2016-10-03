@@ -3,52 +3,59 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingLeft="1dp"
+    android:paddingStart="1dp"
+    android:paddingRight="1dp"
+    android:paddingEnd="1dp"
     >
 
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Register A"/>
 
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-
-            android:paddingTop="2dp"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            >
+            android:layout_alignParentStart="true">
 
             <EditText
-                style="@style/Cell"
+                style="@style/CellBegin"
                 android:hint="±" />
+
             <EditText
                 style="@style/Cell"
                 android:hint="A1"
                 />
+
             <EditText
                 style="@style/Cell"
                 android:hint="A2"
                 />
+
             <EditText
                 style="@style/Cell"
                 android:hint="A3"
                 />
+
             <EditText
                 style="@style/Cell"
                 android:hint="A4"
                 />
+
             <EditText
                 style="@style/Cell"
                 android:hint="A5"
-
                 />
 
         </LinearLayout>
@@ -67,12 +74,11 @@
             >
 
             <EditText
-                style="@style/Cell"
+                style="@style/CellBegin"
                 android:hint="±" />
             <EditText
                 style="@style/Cell"
                 android:hint="X1"
-
                 />
             <EditText
                 style="@style/Cell"
@@ -116,7 +122,7 @@
                 android:orientation="horizontal"
                 android:paddingTop="2dp">
                 <EditText
-                    style="@style/Cell"
+                    style="@style/CellBegin"
                     android:hint="±" />
                 <EditText
                     style="@style/Cell"
@@ -135,7 +141,7 @@
                 android:orientation="horizontal"
                 android:paddingTop="2dp">
                 <EditText
-                    style="@style/Cell"
+                    style="@style/CellBegin"
                     android:hint="±" />
                 <EditText
                     style="@style/Cell"
@@ -154,7 +160,7 @@
                 android:orientation="horizontal"
                 android:paddingTop="2dp">
                 <EditText
-                    style="@style/Cell"
+                    style="@style/CellBegin"
                     android:hint="±" />
                 <EditText
                     style="@style/Cell"
@@ -173,7 +179,7 @@
                 android:orientation="horizontal"
                 android:paddingTop="2dp">
                 <EditText
-                    style="@style/Cell"
+                    style="@style/CellBegin"
                     android:hint="±" />
                 <EditText
                     style="@style/Cell"
@@ -192,7 +198,7 @@
                 android:orientation="horizontal"
                 android:paddingTop="2dp">
                 <EditText
-                    style="@style/Cell"
+                    style="@style/CellBegin"
                     android:hint="±" />
                 <EditText
                     style="@style/Cell"
@@ -211,7 +217,7 @@
                 android:orientation="horizontal"
                 android:paddingTop="2dp">
                 <EditText
-                    style="@style/Cell"
+                    style="@style/CellBegin"
                     android:hint="±" />
                 <EditText
                     style="@style/Cell"
@@ -230,7 +236,7 @@
                 android:orientation="horizontal"
                 android:paddingTop="2dp">
                 <EditText
-                    style="@style/Cell"
+                    style="@style/CellBegin"
                     android:hint="±" />
                 <EditText
                     style="@style/Cell"
@@ -288,19 +294,36 @@
 
             </LinearLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Memory cells"
-                android:textAlignment="center"/>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/memory_cells"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/cell_bg"
-                >
-            </android.support.v7.widget.RecyclerView>
+                android:orientation="vertical"
+                android:background="@drawable/cell_bg">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Memory cells" />
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginEnd="2dp">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/memory_cells"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"/>
+
+                </FrameLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
 

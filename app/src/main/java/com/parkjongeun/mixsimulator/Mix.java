@@ -658,7 +658,7 @@ public class Mix {
      * 19 | Typewriter terminal | 14 words
      * 20 | Paper tape | 14 words
      *
-     * Input ior output with magnetic tape, disk, or drum units reads or writes full words (five bytes and a sign).
+     * Input or output with magnetic tape, disk, or drum units reads or writes full words (five bytes and a sign).
      * Input or output with units 16 through 20, however is always done in a character code where each byte represents one alphameric character.
      *
      * When character-code input is being done, the signs of all words of all words are set to +; on output, signs are ignored.

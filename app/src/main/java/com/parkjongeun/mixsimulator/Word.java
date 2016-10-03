@@ -57,6 +57,9 @@ public class Word {
         bytes[0] = sign;
     }
 
+    public boolean isSignPlus() {
+        return getSign() == PLUS;
+    }
 
     int getQuantity() {
         return getQuantity(0, WORD_SIZE - 1);

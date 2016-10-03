@@ -15,21 +15,27 @@
         android:layout_height="wrap_content" />
 
     <EditText
+        android:id="@+id/cell0"
         style="@style/Cell2"
         android:hint="±"/>
     <EditText
+        android:id="@+id/cell1"
         style="@style/Cell2"
         android:hint="1"/>
     <EditText
+        android:id="@+id/cell2"
         style="@style/Cell2"
         android:hint="2"/>
     <EditText
+        android:id="@+id/cell3"
         style="@style/Cell2"
         android:hint="3"/>
     <EditText
+        android:id="@+id/cell4"
         style="@style/Cell2"
         android:hint="4"/>
     <EditText
+        android:id="@+id/cell5"
         style="@style/Cell2"
         android:hint="5"/>
 

@@ -6,99 +6,35 @@
     android:paddingLeft="1dp"
     android:paddingStart="1dp"
     android:paddingRight="1dp"
-    android:paddingEnd="1dp"
-    >
+    android:paddingEnd="1dp">
 
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Register A"/>
 
-
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <include
+            android:id="@+id/registerA"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true">
-
-            <EditText
-                style="@style/CellBegin"
-                android:hint="±" />
-
-            <EditText
-                style="@style/Cell"
-                android:hint="A1"
-                />
-
-            <EditText
-                style="@style/Cell"
-                android:hint="A2"
-                />
-
-            <EditText
-                style="@style/Cell"
-                android:hint="A3"
-                />
-
-            <EditText
-                style="@style/Cell"
-                android:hint="A4"
-                />
-
-            <EditText
-                style="@style/Cell"
-                android:hint="A5"
-                />
-
-        </LinearLayout>
+            layout="@layout/mix_register" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Register X"/>
-        <LinearLayout
-            android:layout_width="wrap_content"
+
+        <include
+            android:id="@+id/registerX"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="2dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            >
-
-            <EditText
-                style="@style/CellBegin"
-                android:hint="±" />
-            <EditText
-                style="@style/Cell"
-                android:hint="X1"
-                />
-            <EditText
-                style="@style/Cell"
-                android:hint="X2"
-
-                />
-            <EditText
-                style="@style/Cell"
-                android:hint="X3"
-                />
-            <EditText
-                style="@style/Cell"
-                android:hint="X4"
-                />
-            <EditText
-                style="@style/Cell"
-                android:hint="X5"
-                />
-
-        </LinearLayout>
+            layout="@layout/mix_register" />
 
     </LinearLayout>
 
@@ -116,135 +52,67 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Register I1"/>
-            <LinearLayout
+
+            <include
+                android:id="@+id/registerI1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="2dp">
-                <EditText
-                    style="@style/CellBegin"
-                    android:hint="±" />
-                <EditText
-                    style="@style/Cell"
-                    android:hint="I14"/>
-                <EditText
-                    style="@style/Cell"
-                    android:hint="I15"/>
-            </LinearLayout>
+                layout="@layout/mix_index_register" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Register I2"/>
-            <LinearLayout
+            <include
+                android:id="@+id/registerI2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="2dp">
-                <EditText
-                    style="@style/CellBegin"
-                    android:hint="±" />
-                <EditText
-                    style="@style/Cell"
-                    android:hint="I24"/>
-                <EditText
-                    style="@style/Cell"
-                    android:hint="I25"/>
-            </LinearLayout>
+                layout="@layout/mix_index_register" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Register I3"/>
-            <LinearLayout
+            <include
+                android:id="@+id/registerI3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="2dp">
-                <EditText
-                    style="@style/CellBegin"
-                    android:hint="±" />
-                <EditText
-                    style="@style/Cell"
-                    android:hint="I34"/>
-                <EditText
-                    style="@style/Cell"
-                    android:hint="I35"/>
-            </LinearLayout>
+                layout="@layout/mix_index_register" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Register I4"/>
-            <LinearLayout
+            <include
+                android:id="@+id/registerI4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="2dp">
-                <EditText
-                    style="@style/CellBegin"
-                    android:hint="±" />
-                <EditText
-                    style="@style/Cell"
-                    android:hint="I44"/>
-                <EditText
-                    style="@style/Cell"
-                    android:hint="I45"/>
-            </LinearLayout>
+                layout="@layout/mix_index_register" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Register I5"/>
-            <LinearLayout
+            <include
+                android:id="@+id/registerI5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="2dp">
-                <EditText
-                    style="@style/CellBegin"
-                    android:hint="±" />
-                <EditText
-                    style="@style/Cell"
-                    android:hint="I54"/>
-                <EditText
-                    style="@style/Cell"
-                    android:hint="I55"/>
-            </LinearLayout>
+                layout="@layout/mix_index_register" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Register I6"/>
-            <LinearLayout
+            <include
+                android:id="@+id/registerI6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="2dp">
-                <EditText
-                    style="@style/CellBegin"
-                    android:hint="±" />
-                <EditText
-                    style="@style/Cell"
-                    android:hint="I64"/>
-                <EditText
-                    style="@style/Cell"
-                    android:hint="I65"/>
-            </LinearLayout>
+                layout="@layout/mix_index_register" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Register J"/>
-            <LinearLayout
+            <include
+                android:id="@+id/registerJ"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="2dp">
-                <EditText
-                    style="@style/CellBegin"
-                    android:hint="±" />
-                <EditText
-                    style="@style/Cell"
-                    android:hint="J4"/>
-                <EditText
-                    style="@style/Cell"
-                    android:hint="J5"/>
-            </LinearLayout>
+                layout="@layout/mix_index_register" />
         </LinearLayout>
 
         <LinearLayout

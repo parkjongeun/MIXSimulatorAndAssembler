@@ -11,6 +11,7 @@ public class Word {
     int[] bytes;
     final static int BYTE_SIZE = 64;
     final static int WORD_SIZE = 6;
+    final static int COUNT_OF_BYTES_IN_WORD = 5;
     final static int ZERO = 0;
 
     final static int PLUS = 1;
@@ -174,4 +175,33 @@ public class Word {
         word.setField(5, getField(5));*/
     }
 
+    public void setAddress(final int sign, final int aa) {
+        if (!(sign == MINUS || sign == PLUS)) {
+            throw new IllegalArgumentException("The argument sign must either be MINUS or PLUS: " + sign);
+        }
+        if (aa < 0) {
+            throw new IllegalArgumentException("The argument aa is negative: " + aa);
+        }
+        if (aa >= BYTE_SIZE * BYTE_SIZE) {
+            throw new IllegalArgumentException("The argument aa doesn't fit in 2-bytes: " + aa);
+        }
+        int a1, a2;
+        a1 = aa / BYTE_SIZE;
+        a2 = aa % BYTE_SIZE;
+        setField(1, a1);
+        setField(2, a2);
+        setSign(sign);
+    }
+
+    public void setI(int i) {
+        setField(3, i);
+    }
+
+    public void setF(int f) {
+        setField(4, f);
+    }
+
+    public void setC(int c) {
+        setField(5, c);
+    }
 }

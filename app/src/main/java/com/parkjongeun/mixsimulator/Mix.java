@@ -694,17 +694,25 @@ public class Mix {
 
     void output(int addr, int unit) {
         // Blocking
-        mIOUnit[unit].waitUntilReady();
+        //mIOUnit[unit].waitUntilReady();
 
         // TODO: Async
-        int blockSize = mIOUnit[unit].blockSize();
+        int blockSize = 24;//mIOUnit[unit].blockSize();
 
         Word[] block = new Word[blockSize];
 
         for (int i = 0; i < blockSize; ++i) {
-            block[i].writeTo(mMemory.get(addr + i));
+            //block[i].writeTo(mMemory.get(addr + i));
+
+            Word w = mMemory.get(addr + i);
+            System.out.print(w.getField(1) % 10);
+            System.out.print(w.getField(2) % 10);
+            System.out.print(w.getField(3) % 10);
+            System.out.print(w.getField(4) % 10);
+            System.out.print(' ');
         }
-        mIOUnit[unit].output(block);
+        System.out.println();
+        //mIOUnit[unit].output(block);
     }
 
     void iocontrol(int addr, int unit) {

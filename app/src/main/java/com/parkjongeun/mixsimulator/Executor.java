@@ -19,6 +19,8 @@ public class Executor {
     void start(int address) {
         mMix.mPC = address;
 
+        int cycle = 0;
+
         while (true) {
             Word w = mMix.mMemory.read(mMix.mPC);
             ++mMix.mPC;
@@ -28,6 +30,8 @@ public class Executor {
             }
             Instruction instruction = Instruction.fromWord(w);
             execute(instruction);
+
+            //System.out.println(++cycle);
         }
     }
 
@@ -122,14 +126,14 @@ public class Executor {
             case DEC5: mMix.decrease(mMix.mRegIx[5], address, index); break;
             case DEC6: mMix.decrease(mMix.mRegIx[6], address, index); break;
 
-            case CMPA: mMix.compare(mMix.mRegA, address, L, R); break;
-            case CMPX: mMix.compare(mMix.mRegX, address, L, R); break;
-            case CMP1: mMix.compare(mMix.mRegIx[1], address, L, R); break;
-            case CMP2: mMix.compare(mMix.mRegIx[2], address, L, R); break;
-            case CMP3: mMix.compare(mMix.mRegIx[3], address, L, R); break;
-            case CMP4: mMix.compare(mMix.mRegIx[4], address, L, R); break;
-            case CMP5: mMix.compare(mMix.mRegIx[5], address, L, R); break;
-            case CMP6: mMix.compare(mMix.mRegIx[6], address, L, R); break;
+            case CMPA: mMix.compare(mMix.mRegA, M, L, R); break;
+            case CMPX: mMix.compare(mMix.mRegX, M, L, R); break;
+            case CMP1: mMix.compare(mMix.mRegIx[1], M, L, R); break;
+            case CMP2: mMix.compare(mMix.mRegIx[2], M, L, R); break;
+            case CMP3: mMix.compare(mMix.mRegIx[3], M, L, R); break;
+            case CMP4: mMix.compare(mMix.mRegIx[4], M, L, R); break;
+            case CMP5: mMix.compare(mMix.mRegIx[5], M, L, R); break;
+            case CMP6: mMix.compare(mMix.mRegIx[6], M, L, R); break;
 
             case JMP: mMix.jump_(address, index); break;
             case JSJ: mMix.jumpSaveJ_(address, index); break;
@@ -149,12 +153,12 @@ public class Executor {
             case JANZ: mMix.jumpNonzero_(mMix.mRegA, address, index); break;
             case JANP: mMix.jumpNonpositive_(mMix.mRegA, address, index); break;
 
-            case JXN: mMix.jumpNegative_(mMix.mRegA, address, index); break;
-            case JXZ: mMix.jumpZero_(mMix.mRegA, address, index); break;
-            case JXP: mMix.jumpPositive_(mMix.mRegA, address, index); break;
-            case JXNN: mMix.jumpNonnegative_(mMix.mRegA, address, index); break;
-            case JXNZ: mMix.jumpNonzero_(mMix.mRegA, address, index); break;
-            case JXNP: mMix.jumpNonpositive_(mMix.mRegA, address, index); break;
+            case JXN: mMix.jumpNegative_(mMix.mRegX, address, index); break;
+            case JXZ: mMix.jumpZero_(mMix.mRegX, address, index); break;
+            case JXP: mMix.jumpPositive_(mMix.mRegX, address, index); break;
+            case JXNN: mMix.jumpNonnegative_(mMix.mRegX, address, index); break;
+            case JXNZ: mMix.jumpNonzero_(mMix.mRegX, address, index); break;
+            case JXNP: mMix.jumpNonpositive_(mMix.mRegX, address, index); break;
 
 
             case J1N: mMix.jumpNegative_(mMix.mRegIx[1], address, index); break;
@@ -206,7 +210,7 @@ public class Executor {
             case HLT: break;
 
             case IN: break;
-            case OUT: break;
+            case OUT: mMix.output(M, field); break;
             case IOC: break;
             case JRED: break;
             case JBUS: break;

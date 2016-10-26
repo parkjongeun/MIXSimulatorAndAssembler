@@ -19,7 +19,7 @@ public class IndexRegister extends Register {
     @Override
     void setQuantity(int sign, int quantity) {
         if (Math.abs(quantity) >= BYTE_SIZE * BYTE_SIZE) {
-            throw new IllegalArgumentException("Doesn't fit in two bytes.");
+            throw new IllegalArgumentException("Doesn't fit in two bytes: " + quantity);
         }
         super.setQuantity(sign, quantity);
     }

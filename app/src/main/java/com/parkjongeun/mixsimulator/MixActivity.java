@@ -28,7 +28,7 @@ public class MixActivity extends AppCompatActivity {
     private Checkable[] mComparisonIndicator;
 
     RecyclerView.Adapter mMemoryCellsAdaptor;
-
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

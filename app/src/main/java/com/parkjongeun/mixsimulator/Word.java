@@ -9,13 +9,13 @@ public class Word {
 
     int buf = 0;
     int[] bytes;
-    final static int BYTE_SIZE = 64;
-    final static int WORD_SIZE = 6;
-    final static int COUNT_OF_BYTES_IN_WORD = 5;
+    public final static int BYTE_SIZE = 64;
+    public final static int WORD_SIZE = 6;
+    public final static int COUNT_OF_BYTES_IN_WORD = 5;
     final static int ZERO = 0;
 
-    final static int PLUS = 1;
-    final static int MINUS = -1;
+    public final static int PLUS = 1;
+    public final static int MINUS = -1;
 
     public static int MAX_VALUE = Word.BYTE_SIZE * Word.BYTE_SIZE * Word.BYTE_SIZE * Word.BYTE_SIZE * Word.BYTE_SIZE - 1;
     public static int MIN_VALUE = -(Word.BYTE_SIZE * Word.BYTE_SIZE * Word.BYTE_SIZE * Word.BYTE_SIZE * Word.BYTE_SIZE - 1);
@@ -37,11 +37,11 @@ public class Word {
     }
 
     @IntRange(from = 0, to = 63)
-    int getField(@IntRange(from = 1, to = 5) int number) {
+    public int getField(@IntRange(from = 1, to = 5) int number) {
         return bytes[number];
     }
 
-    Word setField(@IntRange(from = 1, to = 5) int number, int value) {
+    public Word setField(@IntRange(from = 1, to = 5) int number, int value) {
         if (value < 0 || value > 63) {
             throw new IllegalArgumentException("value < 0 or value > 63. value: " + value);
         }
@@ -49,24 +49,28 @@ public class Word {
         return this;
     }
 
-    int getSign() {
+    public int getSign() {
         //return buf < 0;
         return bytes[0];
     }
 
-    void setSign(int sign) {
-        bytes[0] = sign;
+    public void setSign(int sign) {
+        if (sign == PLUS || sign == MINUS) {
+            bytes[0] = sign;
+        } else {
+            throw new IllegalArgumentException("sign: " + sign);
+        }
     }
 
     public boolean isSignPlus() {
         return getSign() == PLUS;
     }
 
-    int getQuantity() {
+    public int getQuantity() {
         return getQuantity(0, WORD_SIZE - 1);
     }
 
-    int getQuantity(int left, int right) {
+    public int getQuantity(int left, int right) {
         int sign = 1;
         int quantity = 0;
         if (left == 0) {
@@ -94,7 +98,7 @@ public class Word {
         setQuantity(quantity < 0 ? MINUS : PLUS, quantity);
     }*/
 
-    void setQuantity(final int sign, final int quantity) {
+    public void setQuantity(final int sign, final int quantity) {
         if (Math.abs(quantity) > MAX_VALUE) {
             throw new IllegalArgumentException("" + quantity);
         }
@@ -106,27 +110,27 @@ public class Word {
         setSign(sign);
     }
 
-    int getAddress() {
+    public int getAddress() {
         //return (buf < 0 ? -1 : 1) * buf >> 12 & 0xFF;
         return (bytes[1] + bytes[2]) * (getSign() == PLUS ? 1 : -1);
     }
 
-    int getIndexSpec() {
+    public int getIndexSpec() {
         //return buf >> 8 & 0xF;
         return bytes[3];
     }
 
-    int getFieldSpec() {
+    public int getFieldSpec() {
         //return buf >> 4 & 0xF;
         return bytes[4];
     }
 
-    int getOpCode() {
+    public int getOpCode() {
         //return buf & 0xF;
         return bytes[5];
     }
 
-    void reset() {
+    public void reset() {
         bytes[0] = PLUS;
         bytes[1] = 0;
         bytes[2] = 0;
@@ -135,7 +139,7 @@ public class Word {
         bytes[5] = 0;
     }
 
-    void shiftLeft() {
+    public void shiftLeft() {
         bytes[1] = bytes[2];
         bytes[2] = bytes[3];
         bytes[3] = bytes[4];
@@ -143,7 +147,7 @@ public class Word {
         bytes[5] = ZERO;
     }
 
-    void shiftRight() {
+    public void shiftRight() {
         bytes[5] = bytes[4];
         bytes[4] = bytes[3];
         bytes[3] = bytes[2];
@@ -151,19 +155,19 @@ public class Word {
         bytes[1] = ZERO;
     }
 
-    void shiftLeft(int number) {
+    public void shiftLeft(int number) {
         for (int i = 0; i < number && i < 5; ++i) {
             shiftLeft();
         }
     }
 
-    void shiftRight(int number) {
+    public void shiftRight(int number) {
         for (int i = 0; i < number && i < 5; ++i) {
             shiftRight();
         }
     }
 
-    void writeTo(Word word) {
+    public void writeTo(Word word) {
         for (int i = 0; i < WORD_SIZE; ++i) {
             word.bytes[i] = bytes[i];
         }

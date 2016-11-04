@@ -1,7 +1,7 @@
 package com.parkjongeun.mixsimulator.assembler;
 
 /**
- * Created by jepark on 01/11/2016.
+ * Created by Parkjongeun on 01/11/2016.
  */
 
 public class AtomicExpression {
@@ -30,7 +30,7 @@ public class AtomicExpression {
             return true;
 
         // A defined symbol (denoting the numerical equivalent of that symbol)
-        if (Symbol.isSymbol(text) && symbolTable.contains(text))
+        if (isDefinedSymbol(text, symbolTable))
             return true;
 
         // An asterisk
@@ -38,5 +38,25 @@ public class AtomicExpression {
             return true;
 
         return false;
+    }
+
+    private static boolean isDefinedSymbol(String text, SymbolTable symbolTable) {
+        return Symbol.isSymbol(text) && symbolTable.contains(text);
+    }
+
+    public static int eval(String text, SymbolTable symbolTable, int locationCounter) {
+        if (Number.isNumber(text)) {
+            return Integer.parseInt(text);
+        }
+
+        if (isDefinedSymbol(text, symbolTable)) {
+            return symbolTable.get(text);
+        }
+
+        if (ASTERISK.equals(text)) {
+            return locationCounter;
+        }
+
+        throw new IllegalArgumentException(text);
     }
 }

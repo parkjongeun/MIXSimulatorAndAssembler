@@ -167,4 +167,125 @@ public class MIXALTest {
         assertTrue(LiteralConstant.isLiteralContant("=3212=", st));
         assertTrue(LiteralConstant.isLiteralContant("=ASB(1:5),23SF,32432(123+342/321),23SF(2:4)=", st));
     }
+
+    @Test
+    public void evalAtomicExpression() {
+        SymbolTable st = new SymbolTableImpl();
+        st.add("23SF", 1238);
+        st.add("ASB", 6879);
+
+        assertEquals(342123, AtomicExpression.eval("342123", st, 0));
+        assertEquals(1234, AtomicExpression.eval("*", st, 1234));
+        assertEquals(6879, AtomicExpression.eval("ASB", st, 1000));
+        assertEquals(1238, AtomicExpression.eval("23SF", st, 1234));
+    }
+
+    @Test
+    public void evalExpression() {
+        SymbolTable st = new SymbolTableImpl();
+        st.add("23SF", 1238);
+        st.add("ASB", 6879);
+
+        assertEquals(3, Expression.eval("1+2", st, 0));
+        assertEquals(-1, Expression.eval("1-2", st, 1234));
+        assertEquals(2, Expression.eval("1*2", st, 1000));
+        assertEquals(0, Expression.eval("1/2", st, 1000));
+
+        assertEquals(1123 + 2432, Expression.eval("1123+2432", st, 0));
+        assertEquals(1234 - 2432, Expression.eval("1234-2432", st, 1234));
+        assertEquals(1234 * 2432, Expression.eval("1234*2432", st, 1000));
+        assertEquals(1234 / 2432, Expression.eval("1234/2432", st, 1000));
+
+
+        assertEquals(1234 - 543, Expression.eval("*-543", st, 1234));
+        assertEquals(0, Expression.eval("*-*", st, 1234));
+        assertEquals(1234 * 1234, Expression.eval("***", st, 1234));
+
+        assertEquals(((321*234)/23)+543, Expression.eval("321*234/23+543", st, 1234));
+        assertEquals((((321*234)/23)+543)-1234, Expression.eval("321*234/23+543-*", st, 1234));
+
+        assertEquals((((6879*234)/6879)+543)-1234, Expression.eval("ASB*234/ASB+543-*", st, 1234));
+        assertEquals((((123*234)/6879)+1238)-1234, Expression.eval("123*234/ASB+23SF-*", st, 1234));
+
+        assertNotEquals(123+234/79+1238, Expression.eval("123+234/79+23SF", st, 1234));
+    }
+
+    @Test
+    public void evalIndexPart() {
+        SymbolTable st = new SymbolTableImpl();
+        st.add("23SF", 1238);
+        st.add("ASB", 6879);
+
+        assertEquals(3, IndexPart.eval(",1+2", st, 0));
+        assertEquals(-1, IndexPart.eval(",1-2", st, 1234));
+        assertEquals(2, IndexPart.eval(",1*2", st, 1000));
+        assertEquals(0, IndexPart.eval(",1/2", st, 1000));
+
+        assertEquals(1123 + 2432, IndexPart.eval(",1123+2432", st, 0));
+        assertEquals(1234 - 2432, IndexPart.eval(",1234-2432", st, 1234));
+        assertEquals(1234 * 2432, IndexPart.eval(",1234*2432", st, 1000));
+        assertEquals(1234 / 2432, IndexPart.eval(",1234/2432", st, 1000));
+
+
+        assertEquals(1234 - 543, IndexPart.eval(",*-543", st, 1234));
+        assertEquals(0, IndexPart.eval(",*-*", st, 1234));
+        assertEquals(1234 * 1234, IndexPart.eval(",***", st, 1234));
+
+        assertEquals(((321*234)/23)+543, IndexPart.eval(",321*234/23+543", st, 1234));
+        assertEquals((((321*234)/23)+543)-1234, IndexPart.eval(",321*234/23+543-*", st, 1234));
+
+        assertEquals((((6879*234)/6879)+543)-1234, IndexPart.eval(",ASB*234/ASB+543-*", st, 1234));
+        assertEquals((((123*234)/6879)+1238)-1234, IndexPart.eval(",123*234/ASB+23SF-*", st, 1234));
+        //assertNotEquals((((123*234)/6879)+1238)-1234, IndexPart.eval("123*234/ASB+23SF-*", st, 1234));
+
+        assertNotEquals(123+234/79+1238, IndexPart.eval(",123+234/79+23SF", st, 1234));
+
+    }
+
+    @Test
+    public void evalFPart() {
+        SymbolTable st = new SymbolTableImpl();
+        st.add("23SF", 1238);
+        st.add("ASB", 6879);
+
+        final int NORMAL_SETTING = 5;
+
+        assertEquals(3, FPart.eval("(1+2)", st, 0, NORMAL_SETTING));
+        assertEquals(-1, FPart.eval("(1-2)", st, 1234, NORMAL_SETTING));
+        assertEquals(2, FPart.eval("(1*2)", st, 1000, NORMAL_SETTING));
+        assertEquals(0, FPart.eval("(1/2)", st, 1000, NORMAL_SETTING));
+
+        assertEquals(1123 + 2432, FPart.eval("(1123+2432)", st, 0, NORMAL_SETTING));
+        assertEquals(1234 - 2432, FPart.eval("(1234-2432)", st, 1234, NORMAL_SETTING));
+        assertEquals(1234 * 2432, FPart.eval("(1234*2432)", st, 1000, NORMAL_SETTING));
+        assertEquals(1234 / 2432, FPart.eval("(1234/2432)", st, 1000, NORMAL_SETTING));
+
+
+        assertEquals(1234 - 543, FPart.eval("(*-543)", st, 1234, NORMAL_SETTING));
+        assertEquals(0, FPart.eval("(*-*)", st, 1234, NORMAL_SETTING));
+        assertEquals(1234 * 1234, FPart.eval("(***)", st, 1234, NORMAL_SETTING));
+
+        assertEquals(((321*234)/23)+543, FPart.eval("(321*234/23+543)", st, 1234, NORMAL_SETTING));
+        assertEquals((((321*234)/23)+543)-1234, FPart.eval("(321*234/23+543-*)", st, 1234, NORMAL_SETTING));
+
+        assertEquals((((6879*234)/6879)+543)-1234, FPart.eval("(ASB*234/ASB+543-*)", st, 1234, NORMAL_SETTING));
+        assertEquals((((123*234)/6879)+1238)-1234, FPart.eval("(123*234/ASB+23SF-*)", st, 1234, NORMAL_SETTING));
+        //assertNotEquals((((123*234)/6879)+1238)-1234, IndexPart.eval("123*234/ASB+23SF-*", st, 1234));
+
+        assertNotEquals(123+234/79+1238, FPart.eval("(123+234/79+23SF)", st, 1234, NORMAL_SETTING));
+    }
+
+    @Test
+    public void assembleWValue() {
+        SymbolTable st = new SymbolTableImpl();
+        st.add("23SF", 1238);
+        st.add("ASB", 6879);
+
+        assertEquals(1, WValue.assemble("1", st, 0).getQuantity());
+        assertEquals(3, WValue.assemble("1,2,3", st, 0).getQuantity());
+        assertEquals(1 + 1 * Word.BYTE_SIZE * Word.BYTE_SIZE * Word.BYTE_SIZE * Word.BYTE_SIZE, WValue.assemble("1,1(1:1)", st, 0).getQuantity());
+        assertEquals(-1 + -1 * Word.BYTE_SIZE * Word.BYTE_SIZE * Word.BYTE_SIZE * Word.BYTE_SIZE, WValue.assemble("1,-1(0:1)", st, 0).getQuantity());
+        assertEquals(1, WValue.assemble("-1000(0:2),1", st, 0).getQuantity());
+        assertEquals(-1, WValue.assemble("-1000(0:2),-1", st, 0).getQuantity());
+    }
 }

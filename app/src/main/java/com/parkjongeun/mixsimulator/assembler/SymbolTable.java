@@ -4,6 +4,7 @@ import com.parkjongeun.mixsimulator.Word;
 
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,4 +16,8 @@ public interface SymbolTable {
     boolean contains(String symbol);
     void add(String symbol, int value);
     int get(String symbol);
+    //String getNextLocalSymbol(int d);
+    void addFutureRef(int line, String symbol);
+    List<String> getUndefinedFutureRefs();
+    Map<Integer, String> getFutureRef();
 }

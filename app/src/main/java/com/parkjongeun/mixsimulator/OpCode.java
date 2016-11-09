@@ -165,8 +165,8 @@ public enum OpCode {
     CHAR(0x5, 1);
 
 
-    int code;
-    int fieldSpec;
+    public int code;
+    public int fieldSpec;
 
     OpCode(int code) {
         this(code, 5);

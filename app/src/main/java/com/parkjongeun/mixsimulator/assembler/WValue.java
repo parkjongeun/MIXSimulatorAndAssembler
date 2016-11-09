@@ -101,7 +101,7 @@ public class WValue {
 
     public static Word assemble(String text, SymbolTable symTable, int locCounter) {
         if (!isWValue(text,symTable)) {
-            throw new IllegalArgumentException("Syntex error: " + text);
+            throw new IllegalArgumentException("Syntax error: " + text);
         }
         String[] stmts = text.split(",");
 

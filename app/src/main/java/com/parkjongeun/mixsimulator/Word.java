@@ -5,7 +5,7 @@ import android.support.annotation.IntRange;
 /**
  * Created by Parkjongeun on 2016. 9. 13..
  */
-public class Word {
+public class Word extends MIXWord {
 
     int buf = 0;
     int[] bytes;

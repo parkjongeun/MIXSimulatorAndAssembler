@@ -288,4 +288,18 @@ public class MIXALTest {
         assertEquals(1, WValue.assemble("-1000(0:2),1", st, 0).getQuantity());
         assertEquals(-1, WValue.assemble("-1000(0:2),-1", st, 0).getQuantity());
     }
+
+    @Test
+    public void assembleLiteralConstant() {
+        SymbolTable st = new SymbolTableImpl();
+        st.add("23SF", 1238);
+        st.add("ASB", 6879);
+
+        assertEquals(1, LiteralConstant.assemble("=1=", st, 0).getQuantity());
+        assertEquals(3, LiteralConstant.assemble("=1,2,3=", st, 0).getQuantity());
+        assertEquals(1 + 1 * Word.BYTE_SIZE * Word.BYTE_SIZE * Word.BYTE_SIZE * Word.BYTE_SIZE, LiteralConstant.assemble("=1,1(1:1)=", st, 0).getQuantity());
+        assertEquals(-1 + -1 * Word.BYTE_SIZE * Word.BYTE_SIZE * Word.BYTE_SIZE * Word.BYTE_SIZE, LiteralConstant.assemble("=1,-1(0:1)=", st, 0).getQuantity());
+        assertEquals(1, LiteralConstant.assemble("=-1000(0:2),1=", st, 0).getQuantity());
+        assertEquals(-1, LiteralConstant.assemble("=-1000(0:2),-1=", st, 0).getQuantity());
+    }
 }

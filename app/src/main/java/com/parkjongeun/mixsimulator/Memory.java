@@ -18,7 +18,7 @@ public class Memory {
         }
     }
 
-    Word get(int address) {
+    public Word get(int address) {
         return cellArray[address];
     }
 

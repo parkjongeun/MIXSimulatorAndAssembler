@@ -16,7 +16,7 @@ public class Executor {
         mMix = mix;
     }
 
-    void start(int address) {
+    public void start(int address) {
         mMix.mPC = address;
 
         int cycle = 0;

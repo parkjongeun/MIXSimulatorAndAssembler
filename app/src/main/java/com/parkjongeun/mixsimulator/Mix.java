@@ -20,6 +20,7 @@ public class Mix {
     OverFlowToggle mOverFlowToggle;
     CompIndicator mCompIndicator;
 
+    public
     Memory mMemory;
 
     IO[] mIOUnit;
@@ -173,7 +174,7 @@ public class Mix {
 
     void checkAddress(int addr) {
         if (addr < 0 || addr >= mMemory.getSize()) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("addr: " + addr);
         }
     }
 

@@ -1,5 +1,9 @@
 package com.parkjongeun.mixsimulator.assembler;
 
+import com.parkjongeun.mixsimulator.Word;
+
+import java.util.Map;
+
 /**
  * Created by Parkjongeun on 02/11/2016.
  */
@@ -60,16 +64,24 @@ public class APart {
         return text.substring(1, text.length()-1);
     }
 
-    public static int eval(String text, SymbolTable symTable, int locCounter) {
+    public static int eval(String text, SymbolTable symTable, int locCounter, Map<Integer, Word> literalConstMap) {
         if (isVacuous(text)) {
             return 0;
         } else if (Expression.isExpression(text, symTable)) {
             return Expression.eval(text, symTable, locCounter);
         } else if (isFutureReference(text, symTable)) {
-
+            symTable.addFutureRef(locCounter, text);
+            return 0;
         } else if (LiteralConstant.isLiteralContant(text, symTable)) {
-
+            Word w = LiteralConstant.assemble(text, symTable, locCounter);
+            if (!literalConstMap.containsKey(locCounter)) {
+                literalConstMap.put(locCounter, w);
+            } else {
+                throw new IllegalArgumentException();
+            }
+            return 0;
         }
         throw new IllegalArgumentException("text: " + text);
     }
+
 }

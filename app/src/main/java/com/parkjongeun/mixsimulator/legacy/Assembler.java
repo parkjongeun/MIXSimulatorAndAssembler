@@ -1,4 +1,8 @@
-package com.parkjongeun.mixsimulator;
+package com.parkjongeun.mixsimulator.legacy;
+
+import com.parkjongeun.mixsimulator.Memory;
+import com.parkjongeun.mixsimulator.OpCode;
+import com.parkjongeun.mixsimulator.Word;
 
 import java.util.ArrayList;
 import java.util.Collection;

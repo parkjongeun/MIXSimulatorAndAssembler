@@ -4,6 +4,9 @@ package com.parkjongeun.mixsimulator;
 
 import android.util.Pair;
 
+import com.parkjongeun.mixsimulator.simulator.io.IO;
+import com.parkjongeun.mixsimulator.simulator.io.LinePrinter;
+
 /**
  * Created by Parkjongeun on 2016. 9. 13..
  */
@@ -30,6 +33,8 @@ public class Mix {
     final static int ZERO = 0;
     final static int BYTE_COUNT = 5;
 
+
+    IO io = new LinePrinter(Thread.currentThread());
 
     public Mix() {
         mRegA = new Register();
@@ -684,20 +689,23 @@ public class Mix {
 
     void input(final int addr, final int unit) {
         // Blocking
-        mIOUnit[unit].waitUntilReady();
+        /*mIOUnit[unit].waitUntilReady();
 
         // TODO: Async
-        Word[] block = mIOUnit[unit].input();
+        Word[] block = mIOUnit[unit].input(mMemory, addr);
         for (int i = 0; i < block.length; ++i) {
             mMemory.get(addr + i).writeTo(block[i]);
-        }
+        }*/
     }
 
     void output(int addr, int unit) {
         // Blocking
         //mIOUnit[unit].waitUntilReady();
 
-        // TODO: Async
+        io.waitUntilReady();
+        io.output(mMemory, addr);
+
+        /*// TODO: Async
         int blockSize = 24;//mIOUnit[unit].blockSize();
 
         Word[] block = new Word[blockSize];
@@ -712,7 +720,7 @@ public class Mix {
             System.out.print(w.getField(4) % 10);
             System.out.print(' ');
         }
-        System.out.println();
+        System.out.println();*/
         //mIOUnit[unit].output(block);
     }
 

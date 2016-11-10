@@ -21,6 +21,7 @@ public class AssemblerTest {
         //List<Assembler.Line> lines = assembler.parse(assembler.mPgm);
 
         Memory mem = assembler.assemble();
+        System.out.println();
 
         Mix mix = new Mix();
         mix.mMemory = mem;

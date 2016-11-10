@@ -25,7 +25,7 @@ public class MIXALTest {
     @Test
     public void load() {
 
-        Assembler assembler = new Assembler();
+        /*Assembler assembler = new Assembler();
         //List<Assembler.Line> lines = assembler.parse(assembler.mPgm);
 
         Memory mem = assembler.assemble();
@@ -35,7 +35,7 @@ public class MIXALTest {
         Executor executor = new Executor(mix);
         executor.start(3000);
 
-        assertEquals(321, 321);
+        assertEquals(321, 321);*/
         //mix.mMemory.get(4000).setQuantity(Word.MINUS, 432);
     }
 

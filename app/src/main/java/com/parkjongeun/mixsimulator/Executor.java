@@ -25,10 +25,16 @@ public class Executor {
             Word w = mMix.mMemory.read(mMix.mPC);
             ++mMix.mPC;
             // NOP
-            if (w.getField(5) == 0) {
+            //if (w.getField(5) == 0) {
+            //    break;
+            //}
+
+            Instruction instruction = Instruction.fromWord(w);
+
+            if (instruction.mOpCode == OpCode.HLT) {
+                mMix.mPC = 0;
                 break;
             }
-            Instruction instruction = Instruction.fromWord(w);
             execute(instruction);
 
             //System.out.println(++cycle);

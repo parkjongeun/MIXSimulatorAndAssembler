@@ -26,15 +26,25 @@ public class Mix {
     public
     Memory mMemory;
 
-    IO[] mIOUnit;
+    private IO[] mIOUnit = new IO[1 + UNIT_NUMBER_PAPER_TYPE];
 
     int mPC = 0;
 
-    final static int ZERO = 0;
-    final static int BYTE_COUNT = 5;
+    private final static int ZERO = 0;
+    private final static int BYTE_COUNT = 5;
 
 
-    IO io = new LinePrinter(Thread.currentThread());
+    private final static int UNIT_NUMBER_TAPE_MIN = 0;
+    private final static int UNIT_NUMBER_TAPE_MAX = 7;
+    private final static int UNIT_NUMBER_DISK_OR_DRUM_MIN = 8;
+    private final static int UNIT_NUMBER_DISK_OR_DRUM_MAX = 15;
+    private final static int UNIT_NUMBER_CARD_READER = 16;
+    private final static int UNIT_NUMBER_CARD_PUNCH = 17;
+    private final static int UNIT_NUMBER_LINE_PRINTER = 18;
+    private final static int UNIT_NUMBER_TYPEWRITER_TERMINAL = 19;
+    private final static int UNIT_NUMBER_PAPER_TYPE = 20;
+
+
 
     public Mix() {
         mRegA = new Register();
@@ -47,7 +57,8 @@ public class Mix {
         mOverFlowToggle = new OverFlowToggle();
         mCompIndicator = new CompIndicator();
         mMemory = new Memory();
-        mIOUnit = new IO[0];
+
+        mIOUnit[UNIT_NUMBER_LINE_PRINTER] = new LinePrinter(Thread.currentThread());
     }
 
 
@@ -699,11 +710,19 @@ public class Mix {
     }
 
     void output(int addr, int unit) {
-        // Blocking
-        //mIOUnit[unit].waitUntilReady();
 
-        io.waitUntilReady();
-        io.output(mMemory, addr);
+        IO outputDevice = mIOUnit[unit];
+        if (outputDevice == null) {
+            throw new IllegalArgumentException("Unsupported peripheral device.");
+        }
+        if (outputDevice.isInputDevice()) {
+            throw new IllegalArgumentException("This device is for input.");
+        }
+
+        // Blocking
+        outputDevice.waitUntilReady();
+
+        outputDevice.output(mMemory, addr);
 
         /*// TODO: Async
         int blockSize = 24;//mIOUnit[unit].blockSize();

@@ -113,7 +113,7 @@ public abstract class IO {
 
     protected abstract int blockSize();
 
-    protected abstract boolean isInputDevice();
+    public abstract boolean isInputDevice();
 
     public final boolean isReady() {
         return !mIsBusy.get();

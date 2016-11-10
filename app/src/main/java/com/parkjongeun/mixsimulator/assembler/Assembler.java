@@ -3,6 +3,7 @@ package com.parkjongeun.mixsimulator.assembler;
 import com.parkjongeun.mixsimulator.Memory;
 import com.parkjongeun.mixsimulator.OpCode;
 import com.parkjongeun.mixsimulator.Word;
+import com.parkjongeun.mixsimulator.util.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,10 +76,128 @@ public class Assembler {
                     " CON BUF0+10\n" +
                     " END START End of routine.\n";
 
+    static String isainsPgm = "B EQU 1(4:4)\n" +
+            "BMAX EQU B-1\n" +
+            "UMAX EQU 20\n" +
+            "TABLE NOP GOOD(BMAX)\n" +
+            " ADD FLOAT(5:5)\n" +
+            " SUB FLOAT(5:5)\n" +
+            " MUL FLOAT(5:5)\n" +
+            " DIV FLOAT(5:5)\n" +
+            " HLT GOOD\n" +
+            " SRC GOOD\n" +
+            " MOVE MEMORY(BMAX)\n" +
+            " LDA FIELD(5:5)\n" +
+            " LD1 FIELD(5:5)\n" +
+            " LD2 FIELD(5:5)\n" +
+            " LD3 FIELD(5:5)\n" +
+            " LD4 FIELD(5:5)\n" +
+            " LD5 FIELD(5:5)\n" +
+            " LD6 FIELD(5:5)\n" +
+            " LDX FIELD(5:5)\n" +
+            " LDAN FIELD(5:5)\n" +
+            " LD1N FIELD(5:5)\n" +
+            " LD2N FIELD(5:5)\n" +
+            " LD3N FIELD(5:5)\n" +
+            " LD4N FIELD(5:5)\n" +
+            " LD5N FIELD(5:5)\n" +
+            " LD6N FIELD(5:5)\n" +
+            " LDXN FIELD(5:5)\n" +
+            " STA FIELD(5:5)\n" +
+            " ST1 FIELD(5:5)\n" +
+            " ST2 FIELD(5:5)\n" +
+            " ST3 FIELD(5:5)\n" +
+            " ST4 FIELD(5:5)\n" +
+            " ST5 FIELD(5:5)\n" +
+            " ST6 FIELD(5:5)\n" +
+            " STX FIELD(5:5)\n" +
+            " STJ FIELD(5:5)\n" +
+            " STZ FIELD(5:5)\n" +
+            " JBUS MEMORY(UMAX)\n" +
+            " IOC GOOD(UMAX)\n" +
+            " IN MEMORY(UMAX)\n" +
+            " OUT MEMORY(UMAX)\n" +
+            " JRED MEMORY(UMAX)\n" +
+            " JLE MEMORY\n" +
+            " JANP MEMORY\n" +
+            " J1NP MEMORY\n" +
+            " J2NP MEMORY\n" +
+            " J3NP MEMORY\n" +
+            " J4NP MEMORY\n" +
+            " J5NP MEMORY\n" +
+            " J6NP MEMORY\n" +
+            " JXNP MEMORY\n" +
+            " ENNA GOOD\n" +
+            " ENN1 GOOD\n" +
+            " ENN2 GOOD\n" +
+            " ENN3 GOOD\n" +
+            " ENN4 GOOD\n" +
+            " ENN5 GOOD\n" +
+            " ENN6 GOOD\n" +
+            " ENNX GOOD\n" +
+            " CMPA FLOAT(5:5)\n" +
+            " CMP1 FIELD(5:5)\n" +
+            " CMP2 FIELD(5:5)\n" +
+            " CMP3 FIELD(5:5)\n" +
+            " CMP4 FIELD(5:5)\n" +
+            " CMP5 FIELD(5:5)\n" +
+            " CMP6 FIELD(5:5)\n" +
+            " CMPX FIELD(5:5)\n" +
+            "BEGIN LDA INST\n" +
+            " CMPA VALID(3:3)\n" +
+            " JG BAD\n" +
+            " LD1 INST(5:5)\n" +
+            " DEC1 64\n" +
+            " J1NN BAD\n" +
+            " CMPA TABLE+64,1(4:4)\n" +
+            " JG BAD\n" +
+            " LD1 TABLE+64,1(1:2)\n" +
+            " JMP 0,1\n" +
+            "FLOAT CMPA VALID(4:4)\n" +
+            " JE GOOD\n" +
+            "FIELD ENTA 0\n" +
+            " LDX INST(4:4)\n" +
+            " DIV =9=\n" +
+            " STX *+1(0:2)\n" +
+            " INCA 0\n" +
+            " CMPA =5=\n" +
+            " JG BAD\n" +
+            "MEMORY LDX INST(3:3)\n" +
+            " JXNZ GOOD\n" +
+            " LDX INST(0:2)\n" +
+            " JXN BAD\n" +
+            " CMPX =3999=\n" +
+            " JLE GOOD\n" +
+            " JMP BAD\n" +
+            "VALID CMPX 3999,6(6)\n" +
+            "*VALID CON 63,3999(0:2),6(3:3),6(4:4) CMPX 3999,6(6)\n" +
+            "*\n" +
+            "*\n" +
+            "*\n" +
+            "INST CON 63,3999(0:2),6(3:3),45(4:4)\n" +
+            "GOOD OUT GTEXT(18)\n" +
+            " HLT\n" +
+            "BAD OUT BTEXT(18)\n" +
+            " HLT\n" +
+            "GTEXT ALF \"GOOD \"\n" +
+            "BTEXT ALF \"BAD  \"\n" +
+            " END BEGIN\n";
+
+    static String helloPgm = "* mixal hello world\n" +
+            "*\n" +
+            "TERM\tEQU\t18\n" +
+            "\tORIG\t3000\n" +
+            "START\tOUT\tMSG(TERM)\n" +
+            "\tHLT\n" +
+            "MSG\tALF\t\"MIXAL\"\n" +
+            "\tALF\t\" HELL\"\n" +
+            "\tALF\t\"O WOR\"\n" +
+            "\tALF\t\"LD   \"\n" +
+            "\tEND\tSTART\n";
 
 
-    public Memory assemble() {
-        final List<Line> lines = parse(mPgm);
+    public Pair<Memory, Integer> assemble(final String pgm) {
+        final List<Line> lines = parse(pgm);
 
         final Memory memory = new Memory();
         int locCounter = 0;
@@ -130,14 +249,14 @@ public class Assembler {
                 processFutureRef(symTable, memory);
 
                 final int startFrom = memory.get(locCounter).getQuantity(4, 5);
-
+                return new Pair<>(memory, startFrom);
             } else {
                 processMIXOperator(locCounter, memory, line, literalConstMap, symTable);
                 locCounter++;
             }
         }
 
-        return memory;
+        return new Pair<>(memory, 0);
     }
 
     private void processFutureRef(SymbolTable symTable, final Memory memory) {
@@ -296,7 +415,12 @@ public class Assembler {
         int valA = APart.eval(a, symTable, locCounter, literalConstMap);
         int valI = IndexPart.eval(i, symTable, locCounter);
 
-        OpCode opCode = OpCode.valueOf(line.colOP);
+        OpCode opCode = null;
+        try {
+             opCode = OpCode.valueOf(line.colOP);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(locCounter + " Invalid MIX OP Symbol: " + line.colOP);
+        }
 
         int valF = FPart.eval(f, symTable, locCounter, opCode.fieldSpec);
 

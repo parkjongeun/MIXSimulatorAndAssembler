@@ -61,7 +61,7 @@ public class LinePrinter extends IO {
     }
 
     @Override
-    protected boolean isInputDevice() {
+    public boolean isInputDevice() {
         return false;
     }
 

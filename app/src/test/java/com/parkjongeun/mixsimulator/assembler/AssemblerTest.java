@@ -33,6 +33,22 @@ public class AssemblerTest {
         //mix.mMemory.get(4000).setQuantity(Word.MINUS, 432);
     }
 
+    @Test
+    public void lineTokenizerTest() {
+
+
+        for (String l : Assembler.mPgm.split("\n")) {
+            if (l.length() == 0 || l.charAt(0) == '*') {
+                continue;
+            }
+            System.out.println(LineTokenizer.tokenizeIntoLOC_OP_ADDRESS(l + '\n').toString());
+        }
+
+
+
+
+    }
+
     static String pgm1 =
             " ORIG 3000\n" +
             "START OUT HELLO(18)\n" +

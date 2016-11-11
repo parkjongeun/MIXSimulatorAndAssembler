@@ -1,8 +1,5 @@
 package com.parkjongeun.mixsimulator.assembler;
 
-import com.parkjongeun.mixsimulator.Memory;
-import com.parkjongeun.mixsimulator.OpCode;
-import com.parkjongeun.mixsimulator.Word;
 import com.parkjongeun.mixsimulator.util.Pair;
 
 import java.util.ArrayList;
@@ -196,7 +193,7 @@ public class Assembler {
             "\tEND\tSTART\n";
 
 
-    public Pair<Memory, Integer> assemble(final String pgm) {
+    public Pair<int[], Integer> assemble(final String pgm) {
         final List<Line> lines = parse(pgm);
 
         final Memory memory = new Memory();
@@ -249,14 +246,14 @@ public class Assembler {
                 processFutureRef(symTable, memory);
 
                 final int startFrom = memory.get(locCounter).getQuantity(4, 5);
-                return new Pair<>(memory, startFrom);
+                return new Pair<>(memory.toIntArray(), startFrom);
             } else {
                 processMIXOperator(locCounter, memory, line, literalConstMap, symTable);
                 locCounter++;
             }
         }
 
-        return new Pair<>(memory, 0);
+        return new Pair<>(memory.toIntArray(), 0);
     }
 
     private void processFutureRef(SymbolTable symTable, final Memory memory) {

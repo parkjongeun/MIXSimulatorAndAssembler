@@ -1,4 +1,4 @@
-package com.parkjongeun.mixsimulator;
+package com.parkjongeun.mixsimulator.mix;
 
 import org.junit.Test;
 import static org.junit.Assert.*;

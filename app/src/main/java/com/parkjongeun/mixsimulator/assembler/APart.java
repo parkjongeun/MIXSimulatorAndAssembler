@@ -1,6 +1,5 @@
 package com.parkjongeun.mixsimulator.assembler;
 
-import com.parkjongeun.mixsimulator.Word;
 
 import java.util.Map;
 

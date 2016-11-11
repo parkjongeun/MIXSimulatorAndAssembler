@@ -1,11 +1,11 @@
 
-package com.parkjongeun.mixsimulator;
+package com.parkjongeun.mixsimulator.mix;
 
 
 import android.util.Pair;
 
-import com.parkjongeun.mixsimulator.simulator.io.IO;
-import com.parkjongeun.mixsimulator.simulator.io.LinePrinter;
+import com.parkjongeun.mixsimulator.mix.io.IO;
+import com.parkjongeun.mixsimulator.mix.io.LinePrinter;
 
 /**
  * Created by Parkjongeun on 2016. 9. 13..

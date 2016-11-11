@@ -10,6 +10,13 @@ import android.view.ViewGroup;
 import android.widget.Checkable;
 import android.widget.TextView;
 
+import com.parkjongeun.mixsimulator.mix.Executor;
+import com.parkjongeun.mixsimulator.mix.Instruction;
+import com.parkjongeun.mixsimulator.mix.Loader;
+import com.parkjongeun.mixsimulator.mix.Memory;
+import com.parkjongeun.mixsimulator.mix.Mix;
+import com.parkjongeun.mixsimulator.mix.Word;
+
 /**
  * Created by Parkjongeun on 03/10/2016.
  */
@@ -58,13 +65,13 @@ public class MixActivity extends AppCompatActivity {
     }
 
     private void invalidate() {
-        mRegisterA.setWord(mMix.mRegA);
+        /*mRegisterA.setWord(mMix.mRegA);
         mRegisterX.setWord(mMix.mRegX);
         for (int i = 1; i < 7; ++i) {
             mRegisterIx[i].setWord(mMix.mRegIx[i]);
         }
         mRegisterJ.setWord(mMix.mRegJ);
-        mMemoryCellsAdaptor.notifyDataSetChanged();
+        mMemoryCellsAdaptor.notifyDataSetChanged();*/
     }
 
     @Override

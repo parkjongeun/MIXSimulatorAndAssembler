@@ -1,11 +1,10 @@
 package com.parkjongeun.mixsimulator.legacy;
 
-import com.parkjongeun.mixsimulator.Memory;
-import com.parkjongeun.mixsimulator.OpCode;
-import com.parkjongeun.mixsimulator.Word;
+import com.parkjongeun.mixsimulator.mix.Memory;
+import com.parkjongeun.mixsimulator.mix.OpCode;
+import com.parkjongeun.mixsimulator.mix.Word;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

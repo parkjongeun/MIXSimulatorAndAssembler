@@ -1,6 +1,4 @@
-package com.parkjongeun.mixsimulator;
-
-import android.support.annotation.IntRange;
+package com.parkjongeun.mixsimulator.mix;
 
 /**
  * Created by Parkjongeun on 2016. 9. 13..

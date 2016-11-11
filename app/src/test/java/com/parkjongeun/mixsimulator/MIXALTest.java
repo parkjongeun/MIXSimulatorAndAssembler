@@ -11,6 +11,7 @@ import com.parkjongeun.mixsimulator.assembler.Symbol;
 import com.parkjongeun.mixsimulator.assembler.SymbolTable;
 import com.parkjongeun.mixsimulator.assembler.SymbolTableImpl;
 import com.parkjongeun.mixsimulator.assembler.WValue;
+import com.parkjongeun.mixsimulator.mix.Word;
 
 import org.junit.Test;
 

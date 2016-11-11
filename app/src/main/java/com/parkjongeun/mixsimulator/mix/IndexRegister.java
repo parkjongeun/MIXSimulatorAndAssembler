@@ -1,6 +1,4 @@
-package com.parkjongeun.mixsimulator;
-
-import com.parkjongeun.mixsimulator.Register;
+package com.parkjongeun.mixsimulator.mix;
 
 /**
  * Created by Parkjongeun on 2016. 9. 13..
@@ -18,7 +16,7 @@ public class IndexRegister extends Register {
 
     @Override
     public void setQuantity(int sign, int quantity) {
-        if (Math.abs(quantity) >= BYTE_SIZE * BYTE_SIZE) {
+        if (Math.abs(quantity) >= Word.BYTE_SIZE * Word.BYTE_SIZE) {
             throw new IllegalArgumentException("Doesn't fit in two bytes: " + quantity);
         }
         super.setQuantity(sign, quantity);

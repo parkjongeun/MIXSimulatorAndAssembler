@@ -1,4 +1,4 @@
-package com.parkjongeun.mixsimulator;
+package com.parkjongeun.mixsimulator.mix;
 
 /**
  * Created by Parkjongeun on 02/10/2016.
@@ -13,7 +13,7 @@ public class Loader {
         mMix = mix;
     }
 
-    void loadAt(int address, Instruction[] instructions) {
+    public void loadAt(int address, Instruction[] instructions) {
 
         for (int i = 0; i < instructions.length; ++i) {
             mMix.mMemory.write(address + i, instructions[i].toWord());

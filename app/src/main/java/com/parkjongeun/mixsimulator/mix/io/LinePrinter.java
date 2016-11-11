@@ -1,6 +1,6 @@
-package com.parkjongeun.mixsimulator.simulator.io;
+package com.parkjongeun.mixsimulator.mix.io;
 
-import com.parkjongeun.mixsimulator.Word;
+import com.parkjongeun.mixsimulator.mix.Word;
 
 /**
  * Created by Parkjongeun on 10/11/2016.

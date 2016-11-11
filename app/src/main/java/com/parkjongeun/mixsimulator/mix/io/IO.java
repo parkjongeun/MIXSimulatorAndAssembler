@@ -1,10 +1,9 @@
-package com.parkjongeun.mixsimulator.simulator.io;
+package com.parkjongeun.mixsimulator.mix.io;
 
-import com.parkjongeun.mixsimulator.Memory;
-import com.parkjongeun.mixsimulator.Word;
+import com.parkjongeun.mixsimulator.mix.Memory;
+import com.parkjongeun.mixsimulator.mix.Word;
 
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by Parkjongeun on 2016. 9. 13..

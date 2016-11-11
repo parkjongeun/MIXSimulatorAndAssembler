@@ -1,4 +1,4 @@
-package com.parkjongeun.mixsimulator;
+package com.parkjongeun.mixsimulator.mix;
 
 /**
  * Created by Parkjongeun on 2016. 9. 13..

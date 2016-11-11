@@ -1,9 +1,6 @@
-package com.parkjongeun.mixsimulator;
+package com.parkjongeun.mixsimulator.mix;
 
-import android.media.UnsupportedSchemeException;
 import android.support.annotation.IntRange;
-
-import java.awt.font.NumericShaper;
 
 /**
  * Created by Parkjongeun on 2016. 9. 27..

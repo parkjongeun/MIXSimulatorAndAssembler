@@ -1,8 +1,8 @@
 package com.parkjongeun.mixsimulator.assembler;
 
-import com.parkjongeun.mixsimulator.Executor;
-import com.parkjongeun.mixsimulator.Memory;
-import com.parkjongeun.mixsimulator.Mix;
+import com.parkjongeun.mixsimulator.mix.Executor;
+import com.parkjongeun.mixsimulator.mix.Memory;
+import com.parkjongeun.mixsimulator.mix.Mix;
 import com.parkjongeun.mixsimulator.util.Pair;
 
 import org.junit.Test;
@@ -21,11 +21,12 @@ public class AssemblerTest {
         Assembler assembler = new Assembler();
         //List<Assembler.Line> lines = assembler.parse(assembler.mPgm);
 
-        Pair<Memory, Integer> pgm = assembler.assemble(pgm2);
+        Pair<int[], Integer> pgm = assembler.assemble(Assembler.mPgm);
         System.out.println();
 
         Mix mix = new Mix();
-        mix.mMemory = pgm.first;
+        mix.mMemory = Memory.fromIntArray(pgm.first);
+
         Executor executor = new Executor(mix);
         executor.start(pgm.second);
 

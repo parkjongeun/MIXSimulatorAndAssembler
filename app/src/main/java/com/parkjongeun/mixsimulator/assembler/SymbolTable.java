@@ -1,9 +1,6 @@
 package com.parkjongeun.mixsimulator.assembler;
 
-import com.parkjongeun.mixsimulator.Word;
 
-import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 

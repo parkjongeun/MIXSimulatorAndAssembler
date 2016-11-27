@@ -11,7 +11,7 @@ public class Word extends MIXWord {
 
     int buf = 0;
     int[] bytes;
-    public final static int BYTE_SIZE = 64;
+    public final static int BYTE_SIZE = 100;
     public final static int WORD_SIZE = 6;
     public final static int WORD_SIZE_IN_BYTES = 6;
     public final static int COUNT_OF_BYTES_IN_WORD = 5;
@@ -39,13 +39,13 @@ public class Word extends MIXWord {
         }
     }
 
-    @IntRange(from = 0, to = 63)
+    @IntRange(from = 0, to = BYTE_SIZE - 1)
     public int getField(@IntRange(from = 1, to = 5) int number) {
         return bytes[number];
     }
 
     public Word setField(@IntRange(from = 1, to = 5) int number, int value) {
-        if (value < 0 || value > 63) {
+        if (value < 0 || value >= BYTE_SIZE) {
             throw new IllegalArgumentException("value < 0 or value > 63. value: " + value);
         }
         bytes[number] = value;
@@ -210,5 +210,120 @@ public class Word extends MIXWord {
 
     public void setC(int c) {
         setField(5, c);
+    }
+
+    public static Word fromNonZeroLong(long value) {
+        if (value == 0 || value > MAX_VALUE || value < MIN_VALUE) {
+            throw new IllegalArgumentException("" + value);
+        }
+
+        Word word = new Word();
+        if (value < 0)
+            word.setSignToMinus();
+        else
+            word.setSignToPlus();
+
+        long absValue = Math.abs(value);
+        for (int i = 5; i >= 1 && absValue != 0; --i, absValue /= BYTE_SIZE) {
+            int n = (int) (absValue % BYTE_SIZE);
+            word.bytes[i] = n;
+        }
+        return word;
+    }
+
+    public static Word createPositiveZero() {
+        Word word = new Word();
+        word.setSignToPlus();
+        return word;
+    }
+
+    public static Word createNegativeZero() {
+        Word word = new Word();
+        word.setSignToMinus();
+        return word;
+    }
+
+    private long toLong() {
+        long value = 0;
+        for (int i = 5, w = 0; i >= 1; --i, ++w) {
+            if (bytes[i] < 0)
+                throw new RuntimeException("Data corrupted.");
+            value += bytes[i] * weight[w];
+        }
+        if (!isSignPlus()) {
+            value = value * -1;
+        }
+        return value;
+    }
+
+    // If the result is zero, the sign of rA is unchanged. (p.131)
+    public static Word add(final Word lhs, final Word rhs) {
+        long a = lhs.toLong();
+        long b = rhs.toLong();
+
+        long sum = a + b;
+        if (sum == 0) {
+            if (lhs.isSignPlus())
+                return createPositiveZero();
+            else
+                return createNegativeZero();
+        } else {
+            return fromNonZeroLong(sum);
+        }
+    }
+
+    public static Word sub(final Word lhs, final Word rhs) {
+        long a = lhs.toLong();
+        long b = rhs.toLong();
+
+        long sub = a - b;
+        if (sub == 0) {
+            if (lhs.isSignPlus())
+                return createPositiveZero();
+            else
+                return createNegativeZero();
+        } else {
+            return fromNonZeroLong(sub);
+        }
+    }
+
+    public static Word mul(final Word lhs, final Word rhs) {
+        long a = lhs.toLong();
+        long b = rhs.toLong();
+
+        long mul = a * b;
+
+        if (mul != 0) {
+            return fromNonZeroLong(mul);
+        } else {
+            if (lhs.bytes[0] == rhs.bytes[0])
+                return createPositiveZero();
+            else
+                return createNegativeZero();
+        }
+    }
+
+    public static Word div(final Word lhs, final Word rhs) {
+        long a = lhs.toLong();
+        long b = rhs.toLong();
+
+        long div = a / b;
+
+        if (div != 0) {
+            return fromNonZeroLong(div);
+        } else {
+            if (lhs.bytes[0] == rhs.bytes[0])
+                return createPositiveZero();
+            else
+                return createNegativeZero();
+        }
+    }
+
+    public void setSignToPlus() {
+        bytes[0] = PLUS;
+    }
+
+    public void setSignToMinus() {
+        bytes[0] = MINUS;
     }
 }

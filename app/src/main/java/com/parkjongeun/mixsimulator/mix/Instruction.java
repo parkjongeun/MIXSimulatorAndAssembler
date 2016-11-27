@@ -50,7 +50,7 @@ public class Instruction {
 
     public static Instruction fromWord(Word word) {
         int sign = word.getSign();
-        int address = word.getQuantity(1, 2);
+        int address = (int) word.getQuantity(1, 2);
         int index = word.getField(3);
         int field = word.getField(4);
         int opCode_ = word.getField(5);

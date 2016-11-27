@@ -1,8 +1,6 @@
 package com.parkjongeun.mixsimulator.assembler;
 
 
-
-
 /**
  * Created by Parkjongeun on 02/11/2016.
  */

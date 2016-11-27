@@ -237,13 +237,13 @@ public class Executor {
     }
 
     int calcM(int addr, int index) {
-        int indexValue = index == 0 ? 0 : mMix.mRegIx[index].getQuantity();
+        int indexValue = index == 0 ? 0 : (int) mMix.mRegIx[index].getQuantity();
         int m = addr + indexValue;
         return m;
     }
 
     Pair<Integer, Integer> calculateM(int sign, int address, int index) {
-        int indexValue = index == 0 ? 0 : mMix.mRegIx[index].getQuantity();
+        int indexValue = index == 0 ? 0 : (int) mMix.mRegIx[index].getQuantity();
         int m = address + indexValue;
         if (m == 0) {
             return new Pair<>(sign, m);

@@ -251,7 +251,7 @@ public class Assembler {
                 processFutureRef(memory);
 
                 final Word word = evalWValueW(line.colADDRESS);
-                final int startFrom = word.getQuantity(4, 5);
+                final int startFrom = (int) word.getQuantity(4, 5);
 
             } else {
                 Word word = processMIXOperator(line);

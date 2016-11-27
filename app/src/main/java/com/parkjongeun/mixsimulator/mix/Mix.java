@@ -62,7 +62,11 @@ public class Mix {
     }
 
 
-    void start() {
+    public void start() {
+
+    }
+
+    public void loadProgram(byte[] program) {
 
     }
 
@@ -84,7 +88,7 @@ public class Mix {
             reg.setField(i, mMemory.get(addr).getField(i));
         }
         if (right > 0) {
-            reg.shiftRight(Word.WORD_SIZE - 1 - right);
+            reg.shiftRight(Word.WORD_SIZE_IN_BYTES - 1 - right);
         }
     }
 
@@ -279,7 +283,7 @@ public class Mix {
     // ADD
     // If the result is zero, the sign of rA is unchanged.
     void add(int addr, int left, int right) {
-        int quantity = mMemory.get(addr).getQuantity(left, right);
+        long quantity = mMemory.get(addr).getQuantity(left, right);
         add(quantity);
     }
 
@@ -289,27 +293,34 @@ public class Mix {
         add_(reg, m, fSpec.first, fSpec.second);
     }
 
-    void add(int quantity) {
+    void add(long quantity) {
         add(mRegA, quantity);
     }
 
-    void add(Register reg, int quantity) {
-        int r = reg.getQuantity();
+    void add(Register reg, long quantity) {
+        long rVal = reg.getQuantity();
 
-        int sum = r + quantity;
-        int sumAbs = Math.abs(sum);
+        long sum = rVal + quantity;
+        //long sumAbs = Math.abs(sum);
 
-        if (sumAbs > Word.MAX_VALUE) {
+        // Word.MIN_VALUE == -WORD.MAX_VALUE
+        if (sum > Word.MAX_VALUE) {
             mOverFlowToggle.setOverFlow(true);
-            sumAbs = sumAbs % (Word.MAX_VALUE + 1);
+            sum = sum - (Word.MAX_VALUE + 1);
+        } else if (sum < Word.MIN_VALUE) {
+            mOverFlowToggle.setOverFlow(true);
+            sum = sum + (Word.MAX_VALUE + 1);
         }
-        int sign = sumAbs == 0 ? reg.getSign() : (sum < 0 ? Word.MINUS : Word.PLUS);
 
-        reg.setQuantity(sign, sumAbs);
+        if (sum == 0) {
+            reg.setQuantitySignUnchanged(0);
+        } else {
+            reg.setQuantity(sum < 0 ? Word.MINUS : Word.PLUS, Math.abs(sum));
+        }
     }
 
     void subtract(int addr, int left, int right) {
-        int quantity = mMemory.get(addr).getQuantity(left, right);
+        long quantity = mMemory.get(addr).getQuantity(left, right);
         add(-quantity);
     }
 
@@ -323,17 +334,25 @@ public class Mix {
     // The signs of rA and rX are both set to the algebraic sign of the product.
     void multiply(int addr, int left, int right) {
 
-        long mem = mMemory.get(addr).getQuantity(left, right);
-        long rA = mRegA.getQuantity();
-        long mul = mem * rA;
+        long memVal = mMemory.get(addr).getQuantity(left, right);
+        long rAVal = mRegA.getQuantity();
+        long mul = memVal * rAVal;
 
         long mulAbs = Math.abs(mul);
 
-        int ls = (int) mulAbs % Word.MAX_VALUE;
-        int gs = (int) mulAbs / Word.MAX_VALUE;
-        int sign = mMemory.get(addr).getSign() == mRegA.getSign() ? Word.PLUS : Word.MINUS;
-        mRegA.setQuantity(sign, gs);
-        mRegX.setQuantity(sign, ls);
+        long low = mulAbs % Word.MAX_VALUE;
+        long high = mulAbs / Word.MAX_VALUE;
+
+        mRegA.setQuantitySignUnchanged(high);
+        mRegX.setQuantitySignUnchanged(low);
+
+        if (mMemory.get(addr).getSign() == mRegA.getSign()) {
+            mRegA.setSignToPlus();
+            mRegX.setSignToPlus();
+        } else {
+            mRegA.setSignToMinus();
+            mRegX.setSignToMinus();
+        }
     }
 
     void multiply_(Register reg, int address, int index, int fieldSpec) {
@@ -352,18 +371,36 @@ public class Mix {
         long rAAbs = Math.abs(mRegA.getQuantity());
         long rXAbs = Math.abs(mRegX.getQuantity());
 
-        long v = mMemory.get(addr).getQuantity(left, right);
-        int vSign = mMemory.get(addr).getSign();
+        long vAbs = Math.abs(mMemory.get(addr).getQuantity(left, right));
+        int vSign;
 
-        if (rAAbs >= Math.abs(v) || v == 0) {
+        if (left == 0)
+            vSign = mMemory.get(addr).getSign();
+        else
+            vSign = Word.PLUS;
+
+
+        if (vAbs == 0 || rAAbs >= vAbs) { // |rA| >= |V|
             mOverFlowToggle.setOverFlow(true);
         } else {
-            long rAX = (mRegA.getSign() == Word.MINUS ? -1 : 1) * rAAbs * (Word.MAX_VALUE + 1) + rXAbs;
-            long quotient = rAX / v; // +-floor(|aAX/V|)
-            long remainder = (mRegA.getSign() == Word.MINUS ? -1 : 1) * Math.abs(rAX) % Math.abs(v); // +-(|rAX| mod |V|)
-            int prevRegASign = mRegA.getSign();
-            mRegA.setQuantity(mRegA.getSign() == vSign ? Word.PLUS : Word.MINUS, (int) Math.abs(quotient));
-            mRegX.setQuantity(prevRegASign, (int) remainder);
+            long rAXAbs = rAAbs * (Word.MAX_VALUE + 1) + rXAbs;
+
+            long quotientAbs = rAXAbs / vAbs; // +-floor(|aAX/V|)
+
+            long remainderAbs = rAXAbs % vAbs; // +-(|rAX| mod |V|)
+
+            final int prevRegASign = mRegA.getSign();
+
+            mRegA.setQuantitySignUnchanged(quotientAbs);
+            mRegX.setQuantitySignUnchanged(remainderAbs);
+
+            if (mRegA.getSign() != vSign) {
+                mRegA.setSignToMinus();
+            } else {
+                mRegA.setSignToPlus();
+            }
+
+            mRegX.setSign(prevRegASign);
         }
     }
 
@@ -383,7 +420,7 @@ public class Mix {
         int m = calcM(sign, addr, index);
 
         int rSign = m == 0 ? sign : (m < 0 ? Word.MINUS : Word.PLUS);
-        reg.setQuantity(rSign, m);
+        reg.setQuantity(rSign, Math.abs(m));
     }
 
     void enter(Register reg, int sign, int addr) {
@@ -410,7 +447,7 @@ public class Mix {
     }
 
     int calcM(int addr, int index) {
-        int indexValue = index == 0 ? 0 : mRegIx[index].getQuantity();
+        int indexValue = index == 0 ? 0 : (int) mRegIx[index].getQuantity();
         int m = addr + indexValue;
         return m;
     }
@@ -428,8 +465,8 @@ public class Mix {
     // (An equal comparison always occures when F is (0:0), since minus zero equals plus zero.)
 
     void compare(Register reg, int addr, int left, int right) {
-        int regValue = reg.getQuantity(left, right);
-        int memValue = mMemory.get(addr).getQuantity(left, right);
+        long regValue = reg.getQuantity(left, right);
+        long memValue = mMemory.get(addr).getQuantity(left, right);
 
         if (regValue == memValue) {
             mCompIndicator.setEqual();
@@ -568,7 +605,7 @@ public class Mix {
     }
 
     void jumpNegative(Register reg, int from, int to) {
-        int quantity = reg.getQuantity();
+        long quantity = reg.getQuantity();
         if (quantity < 0) {
             jump(from, to);
         }
@@ -580,7 +617,7 @@ public class Mix {
     }
 
     void jumpZero(Register reg, int from, int to) {
-        int quantity = reg.getQuantity();
+        long quantity = reg.getQuantity();
         if (quantity == 0) {
             jump(from, to);
         }
@@ -592,7 +629,7 @@ public class Mix {
     }
 
     void jumpPositive(Register reg, int from, int to) {
-        int quantity = reg.getQuantity();
+        long quantity = reg.getQuantity();
         if (quantity > 0) {
             jump(from, to);
         }
@@ -604,7 +641,7 @@ public class Mix {
     }
 
     void jumpNonnegative(Register reg, int from, int to) {
-        int quantity = reg.getQuantity();
+        long quantity = reg.getQuantity();
         if (!(quantity < 0)) {
             jump(from, to);
         }
@@ -616,7 +653,7 @@ public class Mix {
     }
 
     void jumpNonzero(Register reg, int from, int to) {
-        int quantity = reg.getQuantity();
+        long quantity = reg.getQuantity();
         if (quantity != 0) {
             jump(from, to);
         }
@@ -628,7 +665,7 @@ public class Mix {
     }
 
     void jumpNonpositive(Register reg, int from, int to) {
-        int quantity = reg.getQuantity();
+        long quantity = reg.getQuantity();
         if (!(quantity > 0)) {
             jump(from, to);
         }
@@ -645,7 +682,7 @@ public class Mix {
     // If F = 0, nothing happens.
     void move(int addr, int amount) {
         for (int _i = 0; _i < amount; ++_i) {
-            int rI1 = mRegIx[1].getQuantity();
+            int rI1 = (int) mRegIx[1].getQuantity();
             if (rI1 < 0) {
                 throw new IllegalStateException("rI1 < 0.");
             }
@@ -813,21 +850,20 @@ public class Mix {
 
         long numeric = Integer.parseInt(String.valueOf(digits));
 
-        int sign = mRegA.getSign();
         if (numeric > Word.MAX_VALUE) {
             mOverFlowToggle.setOverFlow(true);
-            numeric = numeric % Word.MAX_VALUE;
+            numeric = numeric % (Word.MAX_VALUE + 1);
         }
-        mRegA.setQuantity(sign, (int) numeric);
+        mRegA.setQuantitySignUnchanged(numeric);
     }
 
     // This operation is used to change numeric code into character code suitable for output to punched cards or tape or the line printer.
     // The value in rA is converted into a 10-byte decimal number that is put into registers A and X in character code.
     // The signs of rA and rX are unchanged. M is ignored.
     void convertToCharacters() {
-        int rAAbs = Math.abs(mRegA.getQuantity());
+        long rAAbs = Math.abs(mRegA.getQuantity());
 
-        char[] digits = Integer.toString(rAAbs, 10).toCharArray();
+        char[] digits = Long.toString(rAAbs, 10).toCharArray();
 
         int[] buf = new int[10];
         for (int i = 0; i < buf.length; ++i) {
@@ -835,7 +871,7 @@ public class Mix {
         }
 
         for (int i = digits.length - 1, f = 9; i >= 0; --i, --f) {
-            buf[f] = Integer.parseInt(String.valueOf(digits[i]));
+            buf[f] = Character.digit(digits[i], 10);
         }
         for (int i = 1; i <= 5; ++i) {
             mRegA.setField(i, 30 + buf[i - 1]);

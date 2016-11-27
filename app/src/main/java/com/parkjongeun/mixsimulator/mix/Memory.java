@@ -35,12 +35,12 @@ public class Memory {
     }
 
     public static Memory fromIntArray(int[] intArray) {
-        if (intArray.length != SIZE * Word.WORD_SIZE) {
+        if (intArray.length != SIZE * Word.WORD_SIZE_IN_BYTES) {
             throw new IllegalArgumentException("Inconsistent.");
         }
 
         Memory mem = new Memory();
-        for (int i = 0, j = 0; i < SIZE; ++i, j = i * Word.WORD_SIZE) {
+        for (int i = 0, j = 0; i < SIZE; ++i, j = i * Word.WORD_SIZE_IN_BYTES) {
             mem.cellArray[i].bytes[0] = intArray[j];
             mem.cellArray[i].bytes[1] = intArray[j + 1];
             mem.cellArray[i].bytes[2] = intArray[j + 2];

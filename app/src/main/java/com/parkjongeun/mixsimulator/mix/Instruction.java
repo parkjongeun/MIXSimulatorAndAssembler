@@ -9,6 +9,7 @@ public class Instruction {
 
     final boolean mSign;
     @IntRange(from=0)
+    final int mAA;
     final int mAddress;
     @IntRange(from=0, to=6)
     final int mIndex;
@@ -19,9 +20,9 @@ public class Instruction {
     final static int PLUS = 1;
 
 
-    public Instruction(boolean sign, int address, int index, int field, String opCode) {
-        if (address < 0) {
-            throw new IllegalArgumentException("address < 0.");
+    public Instruction(boolean sign, int AA, int index, int field, String opCode) {
+        if (AA < 0) {
+            throw new IllegalArgumentException("AA < 0.");
         }
         if (index < 0 || index > 6) {
             throw new IllegalArgumentException("index < 0 || index > 6.");
@@ -29,8 +30,9 @@ public class Instruction {
         if (field < 0) {
             throw new IllegalArgumentException("field < 0.");
         }
+        mAA = AA;
         mSign = sign;
-        mAddress = address;
+        mAddress = !sign ? AA : -AA;
         mIndex = index;
         mField = field;
         mOpCode = OpCode.valueOf(opCode);
@@ -50,22 +52,45 @@ public class Instruction {
 
     public static Instruction fromWord(Word word) {
         int sign = word.getSign();
-        int address = (int) word.getQuantity(1, 2);
+        int AA = (int) word.getQuantity(1, 2);
         int index = word.getField(3);
         int field = word.getField(4);
-        int opCode_ = word.getField(5);
-        OpCode opCode = OpCode.valueOf(opCode_, field);
+        int C = word.getField(5);
         try {
-            Instruction instruction = new Instruction(sign == Word.MINUS, address, index, field, opCode.name());
-            return instruction;
+            OpCode opCode = OpCode.valueOf(C, field);
+            return new Instruction(sign == Word.MINUS, AA, index, field, opCode.name());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Invalid instruction format.");
         }
     }
 
+    public int getSign() {
+        return !mSign ? Word.PLUS : Word.MINUS;
+    }
+
+    public int getAA() {
+        return mAA;
+    }
+
+    public int getI() {
+        return mIndex;
+    }
+
+    public int getF() {
+        return mField;
+    }
+
+    public int getC() {
+        return mOpCode.code;
+    }
+
+    public int getAddress() {
+        return mAddress;
+    }
+
     void checkIntegrity() {
-        if (mAddress < 0) {
-            throw new IllegalStateException("mAddress < 0.");
+        if (mAA < 0) {
+            throw new IllegalStateException("mAA < 0.");
         }
         if (mIndex < 0 || mIndex > 6) {
             throw new IllegalArgumentException("index < 0 || index > 6.");
@@ -81,8 +106,8 @@ public class Instruction {
         Word w = new Word();
         w.reset();
         int sign = mSign ? Word.MINUS : Word.PLUS;
-        int highAddr = mAddress / Word.BYTE_SIZE;
-        int lowAddr = mAddress % Word.BYTE_SIZE;
+        int highAddr = mAA / Word.BYTE_SIZE;
+        int lowAddr = mAA % Word.BYTE_SIZE;
 
         w.setSign(sign);
         w.setField(1, highAddr);

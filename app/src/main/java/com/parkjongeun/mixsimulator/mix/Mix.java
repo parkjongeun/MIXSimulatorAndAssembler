@@ -66,6 +66,10 @@ public class Mix {
 
     }
 
+    public void executeProgram() {
+
+    }
+
     public void loadProgram(byte[] program) {
 
     }
@@ -434,6 +438,14 @@ public class Mix {
 
     void enterNegative(Register reg, int sign, int addr) {
         enterNegative(reg, sign, addr, 0);
+    }
+
+    void increase(Register reg, int amount) {
+        add(reg, amount);
+    }
+
+    void decrease(Register reg, int amount) {
+        add(reg, -amount);
     }
 
     void increase(Register reg, int addr, int index) {

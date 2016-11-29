@@ -178,6 +178,13 @@ public enum OpCode {
     }
 
     public static OpCode valueOf(int C, int F) {
+        /*if (C >= 0 && C <= 38) {
+
+        } else if (C >= 39 && C <= 55) {
+
+        } else if (C >= 56 && C <= 63) {
+
+        }*/
         OpCode[] vs = values();
         List<OpCode> candidates = new ArrayList<>();
         for (int i = 0; i < vs.length; ++i) {

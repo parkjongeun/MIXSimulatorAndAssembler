@@ -8,24 +8,28 @@ import com.parkjongeun.mixsimulator.util.Pair;
  */
 public class Executor {
 
-    Mix mMix;
+    private Mix mMix;
 
     public Executor(Mix mix) {
         mMix = mix;
     }
+
+    /**
+     *
+     * MIX 메모리는 워드의 순서있는 순차적인 리스트 이다.
+     * 프로그램은 워드의 순차적인 리스트 이다.
+     *
+     */
 
     public void start(int address) {
         mMix.mPC = address;
 
         int cycle = 0;
 
+        // Fetch-Execute 사이클
         while (true) {
             Word w = mMix.mMemory.read(mMix.mPC);
             ++mMix.mPC;
-            // NOP
-            //if (w.getField(5) == 0) {
-            //    break;
-            //}
 
             Instruction instruction = Instruction.fromWord(w);
 
@@ -34,9 +38,16 @@ public class Executor {
                 break;
             }
             execute(instruction);
-
-            //System.out.println(++cycle);
         }
+    }
+
+    void decode() {
+    }
+
+    void decode(byte sign, byte byte1, byte byte2, byte byte3, byte byte4, byte byte5) {
+    }
+
+    void decode(byte[] word) {
     }
 
     void execute(Instruction[] pgm) {
@@ -46,55 +57,107 @@ public class Executor {
     }
 
     void execute(Instruction instruction) {
-
         OpCode opCode = instruction.mOpCode;
-        boolean sign_ = instruction.mSign;
-        int sign = sign_ ? Word.MINUS : Word.PLUS;
-        int address = (sign_ ? -1 : 1) * instruction.mAddress;
-        int index = instruction.mIndex;
-        int field = instruction.mField;
-        Pair<Integer, Integer> fSpec = decodeFieldSpec(field);
-        int L = fSpec.first;
-        int R = fSpec.second;
-        Pair<Integer, Integer> M_ = calculateM(sign, address, index);
-        //int MSign = M_.first;
-        int M = M_.second;
+
+        int sign = instruction.getSign();
+        int address = instruction.getAddress();
+        int index = instruction.getI();
+        int field = instruction.getF();
+
+        int M = calculateM(sign, address, index).second;
 
         switch(opCode) {
-            case LDA: mMix.load(mMix.mRegA, M, L, R); break;
-            case LDX: mMix.load(mMix.mRegX, M, L, R); break;
-            case LD1: mMix.load(mMix.mRegIx[1], M, L, R); break;
-            case LD2: mMix.load(mMix.mRegIx[2], M, L, R); break;
-            case LD3: mMix.load(mMix.mRegIx[3], M, L, R); break;
-            case LD4: mMix.load(mMix.mRegIx[4], M, L, R); break;
-            case LD5: mMix.load(mMix.mRegIx[5], M, L, R); break;
-            case LD6: mMix.load(mMix.mRegIx[6], M, L, R); break;
+            case LDA:
+            case LDX:
+            case LD1:
+            case LD2:
+            case LD3:
+            case LD4:
+            case LD5:
+            case LD6:
+            case LDAN:
+            case LDXN:
+            case LD1N:
+            case LD2N:
+            case LD3N:
+            case LD4N:
+            case LD5N:
+            case LD6N:
 
-            case LDAN: mMix.loadNegative(mMix.mRegA, M, L, R); break;
-            case LDXN: mMix.loadNegative(mMix.mRegX, M, L, R); break;
-            case LD1N: mMix.loadNegative(mMix.mRegIx[1], M, L, R); break;
-            case LD2N: mMix.loadNegative(mMix.mRegIx[2], M, L, R); break;
-            case LD3N: mMix.loadNegative(mMix.mRegIx[3], M, L, R); break;
-            case LD4N: mMix.loadNegative(mMix.mRegIx[4], M, L, R); break;
-            case LD5N: mMix.loadNegative(mMix.mRegIx[5], M, L, R); break;
-            case LD6N: mMix.loadNegative(mMix.mRegIx[6], M, L, R); break;
+            case STA:
+            case STX:
+            case ST1:
+            case ST2:
+            case ST3:
+            case ST4:
+            case ST5:
+            case ST6:
 
-            case STA: mMix.store(mMix.mRegA, M, L, R); break;
-            case STX: mMix.store(mMix.mRegX, M, L, R); break;
-            case ST1: mMix.store(mMix.mRegIx[1], M, L, R); break;
-            case ST2: mMix.store(mMix.mRegIx[2], M, L, R); break;
-            case ST3: mMix.store(mMix.mRegIx[3], M, L, R); break;
-            case ST4: mMix.store(mMix.mRegIx[4], M, L, R); break;
-            case ST5: mMix.store(mMix.mRegIx[5], M, L, R); break;
-            case ST6: mMix.store(mMix.mRegIx[6], M, L, R); break;
+            case STJ:
+            case STZ:
 
-            case STJ: mMix.store(mMix.mRegJ, M, L, R); break;
-            case STZ: mMix.storeZero(M, L, R); break;
+            case ADD:
+            case SUB:
+            case MUL:
+            case DIV:
 
-            case ADD: mMix.add(M, L, R); break;
-            case SUB: mMix.subtract(M, L, R); break;
-            case MUL: mMix.multiply(M, L, R); break;
-            case DIV: mMix.divide(M, L, R); break;
+            case CMPA:
+            case CMPX:
+            case CMP1:
+            case CMP2:
+            case CMP3:
+            case CMP4:
+            case CMP5:
+            case CMP6:
+                Pair<Integer, Integer> fSpec = decodeFieldSpec(field);
+                int L = fSpec.first;
+                int R = fSpec.second;
+
+                switch (opCode) {
+                    case LDA: mMix.load(mMix.mRegA, M, L, R); break;
+                    case LDX: mMix.load(mMix.mRegX, M, L, R); break;
+                    case LD1: mMix.load(mMix.mRegIx[1], M, L, R); break;
+                    case LD2: mMix.load(mMix.mRegIx[2], M, L, R); break;
+                    case LD3: mMix.load(mMix.mRegIx[3], M, L, R); break;
+                    case LD4: mMix.load(mMix.mRegIx[4], M, L, R); break;
+                    case LD5: mMix.load(mMix.mRegIx[5], M, L, R); break;
+                    case LD6: mMix.load(mMix.mRegIx[6], M, L, R); break;
+                    case LDAN: mMix.loadNegative(mMix.mRegA, M, L, R); break;
+                    case LDXN: mMix.loadNegative(mMix.mRegX, M, L, R); break;
+                    case LD1N: mMix.loadNegative(mMix.mRegIx[1], M, L, R); break;
+                    case LD2N: mMix.loadNegative(mMix.mRegIx[2], M, L, R); break;
+                    case LD3N: mMix.loadNegative(mMix.mRegIx[3], M, L, R); break;
+                    case LD4N: mMix.loadNegative(mMix.mRegIx[4], M, L, R); break;
+                    case LD5N: mMix.loadNegative(mMix.mRegIx[5], M, L, R); break;
+                    case LD6N: mMix.loadNegative(mMix.mRegIx[6], M, L, R); break;
+
+                    case STA: mMix.store(mMix.mRegA, M, L, R); break;
+                    case STX: mMix.store(mMix.mRegX, M, L, R); break;
+                    case ST1: mMix.store(mMix.mRegIx[1], M, L, R); break;
+                    case ST2: mMix.store(mMix.mRegIx[2], M, L, R); break;
+                    case ST3: mMix.store(mMix.mRegIx[3], M, L, R); break;
+                    case ST4: mMix.store(mMix.mRegIx[4], M, L, R); break;
+                    case ST5: mMix.store(mMix.mRegIx[5], M, L, R); break;
+                    case ST6: mMix.store(mMix.mRegIx[6], M, L, R); break;
+
+                    case STJ: mMix.store(mMix.mRegJ, M, L, R); break;
+                    case STZ: mMix.storeZero(M, L, R); break;
+
+                    case ADD: mMix.add(M, L, R); break;
+                    case SUB: mMix.subtract(M, L, R); break;
+                    case MUL: mMix.multiply(M, L, R); break;
+                    case DIV: mMix.divide(M, L, R); break;
+
+                    case CMPA: mMix.compare(mMix.mRegA, M, L, R); break;
+                    case CMPX: mMix.compare(mMix.mRegX, M, L, R); break;
+                    case CMP1: mMix.compare(mMix.mRegIx[1], M, L, R); break;
+                    case CMP2: mMix.compare(mMix.mRegIx[2], M, L, R); break;
+                    case CMP3: mMix.compare(mMix.mRegIx[3], M, L, R); break;
+                    case CMP4: mMix.compare(mMix.mRegIx[4], M, L, R); break;
+                    case CMP5: mMix.compare(mMix.mRegIx[5], M, L, R); break;
+                    case CMP6: mMix.compare(mMix.mRegIx[6], M, L, R); break;
+                }
+                break;
 
             case ENTA: mMix.enter(mMix.mRegA, sign, address, index); break;
             case ENTX: mMix.enter(mMix.mRegX, sign, address, index); break;
@@ -113,31 +176,24 @@ public class Executor {
             case ENN5: mMix.enterNegative(mMix.mRegIx[5], sign, address, index); break;
             case ENN6: mMix.enterNegative(mMix.mRegIx[6], sign, address, index); break;
 
-            case INCA: mMix.increase(mMix.mRegA, address, index); break;
-            case INCX: mMix.increase(mMix.mRegX, address, index); break;
-            case INC1: mMix.increase(mMix.mRegIx[1], address, index); break;
-            case INC2: mMix.increase(mMix.mRegIx[2], address, index); break;
-            case INC3: mMix.increase(mMix.mRegIx[3], address, index); break;
-            case INC4: mMix.increase(mMix.mRegIx[4], address, index); break;
-            case INC5: mMix.increase(mMix.mRegIx[5], address, index); break;
-            case INC6: mMix.increase(mMix.mRegIx[6], address, index); break;
-            case DECA: mMix.decrease(mMix.mRegA, address, index); break;
-            case DECX: mMix.decrease(mMix.mRegX, address, index); break;
-            case DEC1: mMix.decrease(mMix.mRegIx[1], address, index); break;
-            case DEC2: mMix.decrease(mMix.mRegIx[2], address, index); break;
-            case DEC3: mMix.decrease(mMix.mRegIx[3], address, index); break;
-            case DEC4: mMix.decrease(mMix.mRegIx[4], address, index); break;
-            case DEC5: mMix.decrease(mMix.mRegIx[5], address, index); break;
-            case DEC6: mMix.decrease(mMix.mRegIx[6], address, index); break;
+            case INCA: mMix.increase(mMix.mRegA, M); break;
+            case INCX: mMix.increase(mMix.mRegX, M); break;
+            case INC1: mMix.increase(mMix.mRegIx[1], M); break;
+            case INC2: mMix.increase(mMix.mRegIx[2], M); break;
+            case INC3: mMix.increase(mMix.mRegIx[3], M); break;
+            case INC4: mMix.increase(mMix.mRegIx[4], M); break;
+            case INC5: mMix.increase(mMix.mRegIx[5], M); break;
+            case INC6: mMix.increase(mMix.mRegIx[6], M); break;
+            case DECA: mMix.decrease(mMix.mRegA, M); break;
+            case DECX: mMix.decrease(mMix.mRegX, M); break;
+            case DEC1: mMix.decrease(mMix.mRegIx[1], M); break;
+            case DEC2: mMix.decrease(mMix.mRegIx[2], M); break;
+            case DEC3: mMix.decrease(mMix.mRegIx[3], M); break;
+            case DEC4: mMix.decrease(mMix.mRegIx[4], M); break;
+            case DEC5: mMix.decrease(mMix.mRegIx[5], M); break;
+            case DEC6: mMix.decrease(mMix.mRegIx[6], M); break;
 
-            case CMPA: mMix.compare(mMix.mRegA, M, L, R); break;
-            case CMPX: mMix.compare(mMix.mRegX, M, L, R); break;
-            case CMP1: mMix.compare(mMix.mRegIx[1], M, L, R); break;
-            case CMP2: mMix.compare(mMix.mRegIx[2], M, L, R); break;
-            case CMP3: mMix.compare(mMix.mRegIx[3], M, L, R); break;
-            case CMP4: mMix.compare(mMix.mRegIx[4], M, L, R); break;
-            case CMP5: mMix.compare(mMix.mRegIx[5], M, L, R); break;
-            case CMP6: mMix.compare(mMix.mRegIx[6], M, L, R); break;
+
 
             case JMP: mMix.jump_(address, index); break;
             case JSJ: mMix.jumpSaveJ_(address, index); break;
@@ -210,14 +266,16 @@ public class Executor {
             case SRC: mMix.shiftRightRegAXCircle(M); break;
 
             case MOVE: mMix.move(M, field); break;
+
             case NOP: break;
             case HLT: break;
 
-            case IN: break;
+            case IN: throw new UnsupportedOperationException();
             case OUT: mMix.output(M, field); break;
-            case IOC: break;
-            case JRED: break;
-            case JBUS: break;
+            case IOC: break; // TODO: Implement! //throw new UnsupportedOperationException();
+            case JRED: throw new UnsupportedOperationException();
+            case JBUS: throw new UnsupportedOperationException();
+
             case NUM: mMix.convertToNumeric(); break;
             case CHAR: mMix.convertToCharacters(); break;
 
@@ -236,12 +294,6 @@ public class Executor {
         return new Pair<Integer, Integer>(left, right);
     }
 
-    int calcM(int addr, int index) {
-        int indexValue = index == 0 ? 0 : (int) mMix.mRegIx[index].getQuantity();
-        int m = addr + indexValue;
-        return m;
-    }
-
     Pair<Integer, Integer> calculateM(int sign, int address, int index) {
         int indexValue = index == 0 ? 0 : (int) mMix.mRegIx[index].getQuantity();
         int m = address + indexValue;
@@ -251,10 +303,5 @@ public class Executor {
             return new Pair<>(m < 0 ? Word.MINUS : Word.PLUS, m);
         }
     }
-
-//    int calcM(int sign, int addr, int index) {
-//        return calcM((sign == Word.MINUS ? -1 : 1) * Math.abs(addr), index);
-//    }
-
 
 }

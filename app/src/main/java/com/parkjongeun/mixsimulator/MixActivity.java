@@ -7,7 +7,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Checkable;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.parkjongeun.mixsimulator.mix.Executor;
@@ -62,16 +64,32 @@ public class MixActivity extends AppCompatActivity {
         mMemoryCells.setLayoutManager(layoutManager);
         mMemoryCells.setAdapter(mMemoryCellsAdaptor);
         mMemoryCells.setHasFixedSize(true);
+
+        final EditText gotoEdit = (EditText) findViewById(R.id.goto_edit);
+        ((Button)findViewById(R.id.goto_button)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position;
+                try {
+                    position = Integer.parseInt(gotoEdit.getText().toString());
+                } catch (NumberFormatException e) {
+                    return;
+                }
+                if (0 <= position && position <= 3999) {
+                    mMemoryCells.scrollToPosition(position);
+                }
+            }
+        });
     }
 
     private void invalidate() {
-        /*mRegisterA.setWord(mMix.mRegA);
-        mRegisterX.setWord(mMix.mRegX);
+        mRegisterA.setWord(mMix.getRegA());
+        mRegisterX.setWord(mMix.getRegX());
         for (int i = 1; i < 7; ++i) {
-            mRegisterIx[i].setWord(mMix.mRegIx[i]);
+            mRegisterIx[i].setWord(mMix.getRegIx()[i]);
         }
-        mRegisterJ.setWord(mMix.mRegJ);
-        mMemoryCellsAdaptor.notifyDataSetChanged();*/
+        mRegisterJ.setWord(mMix.getRegJ());
+        mMemoryCellsAdaptor.notifyDataSetChanged();
     }
 
     @Override
@@ -100,6 +118,8 @@ public class MixActivity extends AppCompatActivity {
         };
         new Loader(mMix).loadAt(1, pgm);
         executor.start(1);
+
+        //mMemoryCells.scrollToPosition(3000);
 
         invalidate();
     }

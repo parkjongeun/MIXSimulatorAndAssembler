@@ -175,10 +175,11 @@
 
                 <FrameLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="6dp"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginBottom="3dp"
                     android:layout_marginLeft="2dp"
                     android:layout_marginStart="2dp"
                     android:layout_marginRight="2dp"
@@ -190,6 +191,42 @@
                         android:layout_height="match_parent"/>
 
                 </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <Button
+                        android:id="@+id/run_button"
+                        style="@style/Widget.AppCompat.Button.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:text="GO"/>
+                    <EditText
+                        android:id="@+id/pc_edit"
+                        style="@style/Widget.AppCompat.EditText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:inputType="number"
+                        android:hint="Pro. Count." />
+                    <Button
+                        android:id="@+id/goto_button"
+                        style="@style/Widget.AppCompat.Button.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:text="GOTO"/>
+                    <EditText
+                        android:id="@+id/goto_edit"
+                        style="@style/Widget.AppCompat.EditText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:inputType="number"
+                        android:hint="3000" />
+                </LinearLayout>
 
             </LinearLayout>
 

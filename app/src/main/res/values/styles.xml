@@ -30,6 +30,7 @@
         <item name="android:layout_marginStart">-1dp</item>
         <item name="android:background">@drawable/cell_bg</item>
         <item name="android:textColorHint">#bebebe</item>
+        <item name="android:focusable">false</item>
     </style>
 
     <style name="CellBegin" parent="Cell">
@@ -41,6 +42,12 @@
         <item name="android:layout_width">30dp</item>
         <item name="android:layout_height">30dp</item>
         <item name="android:layout_marginBottom">-1dp</item>
+    </style>
+
+    <style name="Byte">
+        <item name="android:layout_width">@dimen/cell_size</item>
+        <item name="android:layout_height">@dimen/cell_size</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
 

@@ -74,6 +74,22 @@ public class Mix {
 
     }
 
+    public Word getRegA() {
+        return mRegA;
+    }
+
+    public Word getRegX() {
+        return mRegX;
+    }
+
+    public Word[] getRegIx() {
+        return mRegIx;
+    }
+
+    public Word getRegJ() {
+        return mRegJ;
+    }
+
 
     // Generic load operation.
     void load(Register reg, int addr, int left, int right) {
